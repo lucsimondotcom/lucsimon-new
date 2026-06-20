@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="g" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#f0c0d8"/>
+      <stop offset="100%" stop-color="#c87898"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#g)"/>
+  <rect x="260" y="300" width="504" height="360" rx="16" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+  <line x1="260" y1="380" x2="764" y2="380" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+  <line x1="420" y1="300" x2="420" y2="660" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  <text x="512" y="780" font-family="system-ui,sans-serif" font-size="50" font-weight="500" fill="white" text-anchor="middle">Outil interne</text>
+</svg>

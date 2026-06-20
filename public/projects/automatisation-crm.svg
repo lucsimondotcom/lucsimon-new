@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#b8ead8"/>
+      <stop offset="100%" stop-color="#5aab90"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#g)"/>
+  <circle cx="360" cy="512" r="80" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="512" cy="512" r="80" fill="rgba(255,255,255,0.35)"/>
+  <circle cx="664" cy="512" r="80" fill="rgba(255,255,255,0.25)"/>
+  <line x1="440" y1="512" x2="584" y2="512" stroke="rgba(255,255,255,0.5)" stroke-width="3"/>
+  <line x1="592" y1="512" x2="736" y2="512" stroke="rgba(255,255,255,0.5)" stroke-width="3"/>
+  <text x="512" y="720" font-family="system-ui,sans-serif" font-size="46" font-weight="500" fill="white" text-anchor="middle">Automatisation CRM</text>
+</svg>

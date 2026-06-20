@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d4b8f0"/>
+      <stop offset="100%" stop-color="#8a6bb8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#g)"/>
+  <rect x="312" y="280" width="400" height="480" rx="24" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <rect x="352" y="340" width="320" height="24" rx="4" fill="rgba(255,255,255,0.35)"/>
+  <rect x="352" y="400" width="240" height="16" rx="4" fill="rgba(255,255,255,0.2)"/>
+  <rect x="352" y="560" width="160" height="48" rx="24" fill="rgba(255,255,255,0.4)"/>
+  <text x="512" y="860" font-family="system-ui,sans-serif" font-size="48" font-weight="500" fill="white" text-anchor="middle">Site conversion</text>
+</svg>

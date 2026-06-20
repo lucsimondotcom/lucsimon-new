@@ -1,0 +1,192 @@
+diff --git a/node_modules/@react-three/fiber/dist/events-583399dd.cjs.prod.js b/node_modules/@react-three/fiber/dist/events-583399dd.cjs.prod.js
+index f3834fa..f040fe8 100644
+--- a/node_modules/@react-three/fiber/dist/events-583399dd.cjs.prod.js
++++ b/node_modules/@react-three/fiber/dist/events-583399dd.cjs.prod.js
+@@ -970,6 +970,50 @@ function createEvents(store) {
+ 
+ const isRenderer = def => !!(def != null && def.render);
+ const context = /* @__PURE__ */React__namespace.createContext(null);
++
++function createR3FClock() {
++  const timer = new THREE__namespace.Timer();
++  const clock = {
++    autoStart: true,
++    startTime: 0,
++    oldTime: 0,
++    elapsedTime: 0,
++    running: false,
++    start() {
++      clock.running = true;
++      timer.reset();
++      clock.elapsedTime = timer.getElapsed();
++      clock.oldTime = clock.elapsedTime;
++    },
++    stop() {
++      if (clock.running) {
++        timer.update();
++        clock.elapsedTime = timer.getElapsed();
++      }
++      clock.running = false;
++    },
++    getElapsedTime() {
++      clock.getDelta();
++      return clock.elapsedTime;
++    },
++    getDelta() {
++      let diff = 0;
++      if (clock.autoStart && !clock.running) {
++        clock.start();
++        return 0;
++      }
++      if (clock.running) {
++        timer.update();
++        diff = timer.getDelta();
++        clock.elapsedTime = timer.getElapsed();
++        clock.oldTime = clock.elapsedTime - diff;
++      }
++      return diff;
++    },
++  };
++  return clock;
++}
++
+ const createStore = (invalidate, advance) => {
+   const rootStore = traditional.createWithEqualityFn((set, get) => {
+     const position = new THREE__namespace.Vector3();
+@@ -1038,7 +1082,7 @@ const createStore = (invalidate, advance) => {
+       linear: false,
+       flat: false,
+       controls: null,
+-      clock: new THREE__namespace.Clock(),
++      clock: createR3FClock(),
+       pointer,
+       mouse: pointer,
+       frameloop: 'always',
+diff --git a/node_modules/@react-three/fiber/dist/events-b389eeca.esm.js b/node_modules/@react-three/fiber/dist/events-b389eeca.esm.js
+index 76f308c..ddf534d 100644
+--- a/node_modules/@react-three/fiber/dist/events-b389eeca.esm.js
++++ b/node_modules/@react-three/fiber/dist/events-b389eeca.esm.js
+@@ -945,6 +945,50 @@ function createEvents(store) {
+ 
+ const isRenderer = def => !!(def != null && def.render);
+ const context = /* @__PURE__ */React.createContext(null);
++
++function createR3FClock() {
++  const timer = new THREE.Timer();
++  const clock = {
++    autoStart: true,
++    startTime: 0,
++    oldTime: 0,
++    elapsedTime: 0,
++    running: false,
++    start() {
++      clock.running = true;
++      timer.reset();
++      clock.elapsedTime = timer.getElapsed();
++      clock.oldTime = clock.elapsedTime;
++    },
++    stop() {
++      if (clock.running) {
++        timer.update();
++        clock.elapsedTime = timer.getElapsed();
++      }
++      clock.running = false;
++    },
++    getElapsedTime() {
++      clock.getDelta();
++      return clock.elapsedTime;
++    },
++    getDelta() {
++      let diff = 0;
++      if (clock.autoStart && !clock.running) {
++        clock.start();
++        return 0;
++      }
++      if (clock.running) {
++        timer.update();
++        diff = timer.getDelta();
++        clock.elapsedTime = timer.getElapsed();
++        clock.oldTime = clock.elapsedTime - diff;
++      }
++      return diff;
++    },
++  };
++  return clock;
++}
++
+ const createStore = (invalidate, advance) => {
+   const rootStore = createWithEqualityFn((set, get) => {
+     const position = new THREE.Vector3();
+@@ -1013,7 +1057,7 @@ const createStore = (invalidate, advance) => {
+       linear: false,
+       flat: false,
+       controls: null,
+-      clock: new THREE.Clock(),
++      clock: createR3FClock(),
+       pointer,
+       mouse: pointer,
+       frameloop: 'always',
+diff --git a/node_modules/@react-three/fiber/dist/events-f19bcc32.cjs.dev.js b/node_modules/@react-three/fiber/dist/events-f19bcc32.cjs.dev.js
+index 07d45d4..7236939 100644
+--- a/node_modules/@react-three/fiber/dist/events-f19bcc32.cjs.dev.js
++++ b/node_modules/@react-three/fiber/dist/events-f19bcc32.cjs.dev.js
+@@ -970,6 +970,50 @@ function createEvents(store) {
+ 
+ const isRenderer = def => !!(def != null && def.render);
+ const context = /* @__PURE__ */React__namespace.createContext(null);
++
++function createR3FClock() {
++  const timer = new THREE__namespace.Timer();
++  const clock = {
++    autoStart: true,
++    startTime: 0,
++    oldTime: 0,
++    elapsedTime: 0,
++    running: false,
++    start() {
++      clock.running = true;
++      timer.reset();
++      clock.elapsedTime = timer.getElapsed();
++      clock.oldTime = clock.elapsedTime;
++    },
++    stop() {
++      if (clock.running) {
++        timer.update();
++        clock.elapsedTime = timer.getElapsed();
++      }
++      clock.running = false;
++    },
++    getElapsedTime() {
++      clock.getDelta();
++      return clock.elapsedTime;
++    },
++    getDelta() {
++      let diff = 0;
++      if (clock.autoStart && !clock.running) {
++        clock.start();
++        return 0;
++      }
++      if (clock.running) {
++        timer.update();
++        diff = timer.getDelta();
++        clock.elapsedTime = timer.getElapsed();
++        clock.oldTime = clock.elapsedTime - diff;
++      }
++      return diff;
++    },
++  };
++  return clock;
++}
++
+ const createStore = (invalidate, advance) => {
+   const rootStore = traditional.createWithEqualityFn((set, get) => {
+     const position = new THREE__namespace.Vector3();
+@@ -1038,7 +1082,7 @@ const createStore = (invalidate, advance) => {
+       linear: false,
+       flat: false,
+       controls: null,
+-      clock: new THREE__namespace.Clock(),
++      clock: createR3FClock(),
+       pointer,
+       mouse: pointer,
+       frameloop: 'always',

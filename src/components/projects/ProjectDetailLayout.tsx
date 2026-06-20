@@ -1,0 +1,77 @@
+import Link from "next/link";
+import { getNextProject, type Project } from "@/data/projects";
+import { ProjectDetailVisuals } from "./ProjectDetailVisuals";
+import { ProjectNextLink } from "./ProjectNextLink";
+
+interface ProjectDetailLayoutProps {
+  project: Project;
+  projectIndex: number;
+  projectTotal: number;
+}
+
+export function ProjectDetailLayout({
+  project,
+  projectIndex,
+  projectTotal,
+}: ProjectDetailLayoutProps) {
+  const { detail } = project;
+  const nextProject = getNextProject(project.slug);
+  const indexLabel = String(projectIndex).padStart(2, "0");
+  const totalLabel = String(projectTotal).padStart(2, "0");
+
+  return (
+    <>
+      <div className="mx-auto grid grid-cols-1 gap-12 px-8 py-12 sm:px-12 sm:py-16 lg:grid-cols-4 lg:items-start lg:gap-0 lg:px-20 lg:py-0">
+      <aside className="flex flex-col lg:sticky lg:top-16 lg:col-span-1 lg:max-h-[calc(100svh-4rem)] lg:min-h-[calc(100svh-4rem)] lg:self-start lg:py-16 lg:pr-10">
+        <div>
+          <h1 className="text-3xl tracking-tight text-foreground sm:text-4xl xl:text-6xl">
+            {project.title}
+          </h1>
+          <p className="mt-8 max-w-xs text-lg tracking-tight leading-tight text-muted">
+            {detail.subtitle}
+          </p>
+          {detail.website && (
+            <a
+              href={detail.website.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-16 inline-flex items-center gap-2 text-xs font-medium tracking-[0.04em] text-foreground uppercase transition-colors hover:text-muted"
+            >
+              {detail.website.label}
+              <span aria-hidden>↗</span>
+            </a>
+          )}
+        </div>
+
+        <Link
+          href="/projets"
+          className="mt-10 text-xs font-medium tracking-[0.04em] text-muted uppercase transition-colors hover:text-foreground lg:mt-auto"
+        >
+          ← Tous les projets
+        </Link>
+      </aside>
+
+      <ProjectDetailVisuals visuals={detail.visuals} />
+      
+      <aside className="flex flex-col lg:sticky lg:top-16 lg:col-span-1 lg:self-start lg:py-16 lg:pl-10">
+        <p className="text-sm font-medium tracking-wide text-foreground">
+          <span className="text-6xl">{indexLabel}</span>
+          <span className="mx-2.5 text-2xl">/</span>
+          <span className="text-2xl">{totalLabel}</span>
+        </p>
+
+        <dl className="mt-10 space-y-4 uppercase">
+          {detail.specs.map((spec) => (
+            <div key={spec.label}>
+              <dt className="text-xs font-semibold text-foreground">{spec.label}</dt>
+              <dd className="mt-1 text-xs leading-relaxed text-muted">{spec.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </aside>
+      </div>
+
+      {nextProject && <ProjectNextLink project={nextProject} />}
+    </>
+  );
+}

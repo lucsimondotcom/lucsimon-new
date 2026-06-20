@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+/* Les valeurs de couleur sont définies dans src/lib/designTokens.ts
+   et injectées via <ThemeVars /> dans layout.tsx */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--text-secondary);
+  --color-accent: var(--accent);
+  --color-soft-accent: var(--soft-accent);
+  --color-border: var(--border);
+  --color-on-accent: var(--on-accent);
+  --font-sans: var(--font-safiro-regular), var(--font-dm-sans), serif;
+  --font-display: var(--font-safiro-italic), var(--font-dm-sans), serif;
+  --font-chrome: var(--font-safiro-regular), var(--font-dm-sans), serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+html.lenis,
+html.lenis-smooth {
+  scrollbar-width: none;
+}
+
+html.lenis::-webkit-scrollbar,
+html.lenis-smooth::-webkit-scrollbar {
+  display: none;
+}
+
+html:not(.lenis):not(.lenis-smooth) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+html:not(.lenis):not(.lenis-smooth)::-webkit-scrollbar {
+  width: var(--scrollbar-width, 6px);
+}
+
+html:not(.lenis):not(.lenis-smooth)::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+html:not(.lenis):not(.lenis-smooth)::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    var(--scrollbar-gradient-start) 0%,
+    var(--scrollbar-thumb) 100%
+  );
+  border-radius: 999px;
+  border: 1px solid var(--scrollbar-track);
+}
+
+html:not(.lenis):not(.lenis-smooth)::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    var(--scrollbar-thumb) 0%,
+    var(--scrollbar-thumb-hover) 100%
+  );
+}
+
+body:not(.site-preparing):not(.site-ready) {
+  overflow: hidden;
+  background: var(--background);
+}
+
+body:not(.site-preparing):not(.site-ready) #site-app,
+body:not(.site-preparing):not(.site-ready) #site-scrollbar {
+  display: none !important;
+}
+
+body.site-preparing:not(.site-ready) {
+  overflow: hidden;
+}
+
+body.is-loading {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-scroll-arrow {
+    animation: none;
+  }
+}
+
+@keyframes hero-scroll-arrow {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(3px);
+    opacity: 1;
+  }
+}
+
+.hero-scroll-arrow {
+  display: inline-block;
+  animation: hero-scroll-arrow 2.2s ease-in-out infinite;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  html.lenis,
+  html.lenis-smooth {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  html.lenis::-webkit-scrollbar,
+  html.lenis-smooth::-webkit-scrollbar {
+    display: initial;
+    width: var(--scrollbar-width, 6px);
+  }
+
+  html.lenis::-webkit-scrollbar-track,
+  html.lenis-smooth::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+
+  html.lenis::-webkit-scrollbar-thumb,
+  html.lenis-smooth::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 999px;
+  }
+}
