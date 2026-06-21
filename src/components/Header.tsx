@@ -6,7 +6,7 @@ import { MenuCornerFrame } from "@/components/MenuCornerFrame";
 import { useSiteMenu } from "@/contexts/SiteMenuContext";
 
 const brandTextClass =
-  "text-xs font-medium tracking-[0.04em] text-foreground uppercase";
+  "text-xs font-medium tracking-tighter text-foreground uppercase";
 
 export function Header() {
   const {
@@ -26,7 +26,7 @@ export function Header() {
       <div className="relative mx-auto flex h-12 lg:h-16 w-full items-center justify-between px-4 sm:px-12 lg:px-20">
         <Link
           href="/"
-          className={`${brandTextClass} transition-colors hover:text-muted ${
+          className={`${brandTextClass} transition-colors hover:text-muted tracking-tighter ${
             menuOpen ? "relative z-[68]" : ""
           }`}
           onClick={() => {
@@ -38,7 +38,7 @@ export function Header() {
 
         {isHome && (
           <p
-            className={`pointer-events-none absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block ${brandTextClass}`}
+            className={`tracking-tighter pointer-events-none absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block ${brandTextClass}`}
           >
             Digital Product Engineer
           </p>
@@ -55,7 +55,7 @@ export function Header() {
         >
           <button
             type="button"
-            className={`relative flex items-center gap-2.5 text-xs font-medium tracking-[0.04em] text-foreground uppercase transition-colors hover:text-muted ${
+            className={`relative flex items-center gap-2.5 text-xs font-medium tracking-tighter text-foreground uppercase transition-colors hover:text-muted ${
               menuOpen ? "z-[68]" : "z-[61]"
             }`}
             aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}

@@ -11,7 +11,7 @@ const ICON_SIZE = 14;
 const CONTENT_FADE_MS = 200;
 
 const navLinkClass =
-  "text-xs font-medium tracking-[0.04em] uppercase transition-colors";
+  "text-xs font-medium tracking-tighter uppercase transition-colors";
 
 function isActivePath(pathname: string, href: string) {
   if (href === "/") return pathname === "/";

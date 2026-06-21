@@ -142,10 +142,10 @@ export const PROJECTS: Project[] = [
         { src: "/projects/mockup-e-tonus-4.jpg", alt: "E-Tonus mockup 4" },
       ],
       specs: [
-        { label: "Client", value: "Agence créative" },
         { label: "Rôle", value: "Product design & développement full-stack" },
-        { label: "Stack", value: "TypeScript, PostgreSQL, Auth" },
-        { label: "Livraison", value: "2023" },
+        { label: "Stack", value: "TypeScript, Auth, PostgreSQL, API" },
+        { label: "Supports", value: "Web, iOS, Android" },
+        { label: "Livraison", value: "2025" },
       ],
     },
   },

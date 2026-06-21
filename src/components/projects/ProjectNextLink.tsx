@@ -36,7 +36,7 @@ export function ProjectNextLink({ project }: ProjectNextLinkProps) {
           />
         )}
       </span>
-      <span className="pointer-events-none absolute -top-8 right-0 text-xs font-medium tracking-[0.04em] text-muted uppercase opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+      <span className="pointer-events-none absolute -top-8 right-0 text-xs font-medium tracking-tighter text-muted uppercase opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         Suivant
       </span>
     </Link>

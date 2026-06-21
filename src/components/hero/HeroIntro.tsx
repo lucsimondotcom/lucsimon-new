@@ -35,7 +35,7 @@ export function HeroIntro({ heroProgress, visible }: HeroIntroProps) {
       </div>
 
       <ul
-        className="absolute bottom-8 left-8 space-y-0.5 font-chrome text-xs  tracking-[0.04em] text-foreground uppercase sm:bottom-10 sm:left-12 lg:left-20"
+        className="absolute bottom-8 left-8 space-y-0.5 font-chrome text-xs  tracking-tighter text-foreground uppercase sm:bottom-10 sm:left-12 lg:left-20"
         style={{ opacity: scrollHintOpacity }}
       >
         {HERO_CONTENT.stats.map((line) => (

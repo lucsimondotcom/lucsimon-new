@@ -12,7 +12,7 @@ export function ProjectDetailLink({ slug, className = "" }: ProjectDetailLinkPro
   return (
     <Link
       href={`/projets/${slug}`}
-      className={`inline-flex items-center gap-2 text-xs font-medium tracking-[0.04em] text-foreground uppercase transition-colors hover:text-muted ${className}`}
+      className={`inline-flex items-center gap-2 text-xs font-medium tracking-tighter text-foreground uppercase transition-colors hover:text-muted ${className}`}
     >
       Voir le projet
       <span aria-hidden>→</span>

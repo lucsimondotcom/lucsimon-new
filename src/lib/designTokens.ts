@@ -27,8 +27,8 @@ export const theme = {
   /** UI & fond de page */
   background: "#F5F3FF",
   backgroundEdge: "#EBE8FF",
-  foreground: "#1A1A40",
-  muted: "#707090",
+  foreground: "#2b2b31",
+  muted: "#646477",
   accent: "#6973D8",
   softAccent: "#B0B0FF",
   border: "#D4D2E8",
