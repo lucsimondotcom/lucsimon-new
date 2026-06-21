@@ -32,6 +32,7 @@ export function ProjectDetailLayout({
           </p>
          
         </div>
+        <div className="px-4 lg:px-0">
         <dl className="mt-8 lg:mt-10 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-1 uppercase">
           {detail.specs.map((spec) => (
             <div key={spec.label}>
@@ -40,7 +41,8 @@ export function ProjectDetailLayout({
             </div>
           ))}
         </dl>
-       
+        </div>
+
       </aside>
 
       <ProjectDetailVisuals visuals={detail.visuals} />
