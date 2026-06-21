@@ -24,7 +24,7 @@ export function ProjectDetailVisuals({ visuals }: ProjectDetailVisualsProps) {
 
   return (
     <section
-      className="flex flex-col gap-10 lg:col-span-2 lg:py-16 lg:px-5"
+      className="flex flex-col gap-8 lg:col-span-2 lg:py-8 lg:px-5"
       aria-label="Visuels du projet"
     >
       {visuals.map((visual) => (
