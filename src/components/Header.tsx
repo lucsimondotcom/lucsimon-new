@@ -23,7 +23,7 @@ export function Header() {
 
   return (
     <header id="site-header" className="fixed inset-x-0 top-0 z-[66] font-chrome">
-      <div className="relative mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-12 lg:px-20">
+      <div className="relative mx-auto flex h-12 lg:h-16 w-full items-center justify-between px-4 sm:px-12 lg:px-20">
         <Link
           href="/"
           className={`${brandTextClass} transition-colors hover:text-muted ${
