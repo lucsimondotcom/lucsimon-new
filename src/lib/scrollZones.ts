@@ -1,24 +1,14 @@
 import { palette } from "./designTokens";
 
-export const HERO_INTRO_VH = 110;
-/** Étape intermédiaire : fond noir + texte Safiro entre le hero et la méthode */
-export const HERO_BRIDGE_VH = 90;
-/** Zone de lecture outro — plus longue qu’une étape (phrase entière à lire) */
-export const HERO_OUTRO_VH = 320;
-/** Snap outro : juste après le fondu d’entrée, long plateau de lecture ensuite */
-export const OUTRO_SNAP_HOLD = 0.33;
-/** Fondu texte outro — court en entrée/sortie pour maximiser le temps à opacité pleine */
-const OUTRO_READ_FADE_IN = 0.07;
-const OUTRO_READ_FADE_OUT = 0.04;
-/** Animation 3D terminée tôt — scène stable pendant la lecture */
-const OUTRO_3D_COMPLETE_AT = 0.32;
+/** Hauteur unique pour chaque segment du parcours méthode */
+export const ZONE_VH = 180;
 
 export const SCROLL_ZONES = [
-  { id: "understanding", label: "Comprendre", heightVh: 180, type: "static" as const },
-  { id: "strategizing", label: "Structurer", heightVh: 180, type: "static" as const },
-  { id: "building", label: "Construire", heightVh: 180, type: "static" as const },
-  { id: "launching", label: "Lancer", heightVh: 180, type: "static" as const },
-  { id: "measuring", label: "Mesurer", heightVh: 180, type: "static" as const },
+  { id: "understanding", label: "Comprendre", heightVh: ZONE_VH, type: "static" as const },
+  { id: "strategizing", label: "Structurer", heightVh: ZONE_VH, type: "static" as const },
+  { id: "building", label: "Construire", heightVh: ZONE_VH, type: "static" as const },
+  { id: "launching", label: "Lancer", heightVh: ZONE_VH, type: "static" as const },
+  { id: "measuring", label: "Mesurer", heightVh: ZONE_VH, type: "static" as const },
 ];
 
 export type ZoneType = "static";
@@ -35,11 +25,15 @@ const STORY_SCROLL_HEIGHT_VH = SCROLL_ZONES.reduce(
   0,
 );
 
-/** Portion de zone pour le fondu du texte (entrée / sortie) */
+export const HERO_INTRO_VH = ZONE_VH;
+export const HERO_BRIDGE_VH = ZONE_VH;
+export const HERO_OUTRO_VH = ZONE_VH;
+
+/** Portion de zone pour le fondu texte (entrée / sortie) — identique partout */
 export const READ_FADE = 0.18;
-/** Portion de zone pour le crossfade 3D entre étapes */
+/** Portion de zone pour le crossfade 3D entre étapes story */
 export const PHASE_FADE = 0.4;
-/** Centre du plateau de lecture — aligné sur le snap scroll */
+/** Centre du plateau de lecture — identique pour chaque snap */
 export const ZONE_SNAP_HOLD = 0.5;
 /** Début du parcours : fondu hero → étape 01 (part du story progress 0→1) */
 export const HERO_STORY_BLEND = 0.08;
@@ -72,6 +66,28 @@ function easeOutCubic(t: number): number {
   return 1 - (1 - t) ** 3;
 }
 
+function smoothstep(t: number): number {
+  const x = clamp01(t);
+  return x * x * (3 - 2 * x);
+}
+
+/** Opacité de lecture — même courbe pour bridge, story et outro */
+export function zoneReadOpacity(localProgress: number): number {
+  const p = clamp01(localProgress);
+  if (p < READ_FADE) return p / READ_FADE;
+  if (p > 1 - READ_FADE) return (1 - p) / READ_FADE;
+  return 1;
+}
+
+function getSegmentLocalProgress(
+  overallProgress: number,
+  startRatio: number,
+  spanRatio: number,
+): number {
+  if (spanRatio <= 0) return 0;
+  return clamp01((clamp01(overallProgress) - startRatio) / spanRatio);
+}
+
 /** Progression 0→1 pendant la zone héros (sphère qui monte depuis le bas) */
 export function getHeroIntroProgress(overallProgress: number): number {
   const p = clamp01(overallProgress);
@@ -79,37 +95,30 @@ export function getHeroIntroProgress(overallProgress: number): number {
   return easeOutCubic(p / HERO_INTRO_RATIO);
 }
 
-/** Outro 3D — démarre avant la fin du parcours (sphère monte / caméra se rapproche) */
-const OUTRO_VISUAL_LEAD_RATIO = HERO_OUTRO_RATIO * 0.22;
-/** Progression locale 0→1 dans la zone outro (comme zoneLocalProgress des étapes) */
-export function getHeroOutroZoneLocalProgress(overallProgress: number): number {
-  const p = clamp01(overallProgress);
-  const outroStart = STORY_END_RATIO;
-  const outroEnd = STORY_END_RATIO + HERO_OUTRO_RATIO;
-  if (p <= outroStart) return 0;
-  if (p >= outroEnd) return 1;
-  return (p - outroStart) / (outroEnd - outroStart);
+export function getHeroBridgeProgress(overallProgress: number): number {
+  return getSegmentLocalProgress(
+    overallProgress,
+    HERO_BRIDGE_START_RATIO,
+    HERO_BRIDGE_RATIO,
+  );
 }
 
-/** Opacité du texte « Mesurer » — fondu avant le début de l’outro texte */
-export function getMeasuringTextOpacity(overallProgress: number): number {
-  const p = clamp01(overallProgress);
-  const fadeStart = STORY_END_RATIO - OUTRO_VISUAL_LEAD_RATIO;
-  const fadeEnd = STORY_END_RATIO;
-  if (p <= fadeStart) return 1;
-  if (p >= fadeEnd) return 0;
-  return 1 - smoothstep((p - fadeStart) / (fadeEnd - fadeStart));
+export function getHeroOutroLocalProgress(overallProgress: number): number {
+  return getSegmentLocalProgress(
+    overallProgress,
+    STORY_END_RATIO,
+    HERO_OUTRO_RATIO,
+  );
 }
 
-/** Opacité du texte outro — plateau de lecture long (phrase complète) */
+export function getHeroBridgeTextOpacity(overallProgress: number): number {
+  if (!isInHeroBridge(overallProgress)) return 0;
+  return zoneReadOpacity(getHeroBridgeProgress(overallProgress));
+}
+
 export function getHeroOutroTextOpacity(overallProgress: number): number {
-  const localP = getHeroOutroZoneLocalProgress(overallProgress);
-  if (localP <= 0) return 0;
-  if (localP < OUTRO_READ_FADE_IN) return localP / OUTRO_READ_FADE_IN;
-  if (localP > 1 - OUTRO_READ_FADE_OUT) {
-    return (1 - localP) / OUTRO_READ_FADE_OUT;
-  }
-  return 1;
+  if (!isInHeroOutro(overallProgress)) return 0;
+  return zoneReadOpacity(getHeroOutroLocalProgress(overallProgress));
 }
 
 /** @deprecated Alias — préférer getHeroOutroTextOpacity */
@@ -117,24 +126,14 @@ export function getHeroOutroTextProgress(overallProgress: number): number {
   return getHeroOutroTextOpacity(overallProgress);
 }
 
-/** Texte blanc sur fond bleu, puis foreground quand le fond passe au blanc */
-export function getHeroOutroTextInverted(overallProgress: number): boolean {
-  return getHeroOutroZoneLocalProgress(overallProgress) < 0.78;
-}
-
 export function isHeroOutroTextVisible(overallProgress: number): boolean {
-  return getHeroOutroTextProgress(overallProgress) > 0;
+  return getHeroOutroTextOpacity(overallProgress) > 0;
 }
 
-/** Progression 0→1 pour l’outro 3D (sphère + caméra), avec avance sur le parcours */
+/** Progression 0→1 pour l’outro 3D — linéaire sur la zone outro */
 export function getHeroOutroProgress(overallProgress: number): number {
-  const p = clamp01(overallProgress);
-  const start = STORY_END_RATIO - OUTRO_VISUAL_LEAD_RATIO;
-  const end = STORY_END_RATIO + HERO_OUTRO_RATIO;
-  if (p <= start) return 0;
-  if (p >= end) return 1;
-  const linear = (p - start) / (end - start);
-  return easeOutCubic(Math.min(1, linear / OUTRO_3D_COMPLETE_AT));
+  if (!isInHeroOutro(overallProgress)) return 0;
+  return easeOutCubic(getHeroOutroLocalProgress(overallProgress));
 }
 
 /** Progression 0→1 pour les 5 étapes du parcours (entre intro et outro) */
@@ -152,23 +151,6 @@ export function isInHeroIntro(overallProgress: number): boolean {
 export function isInHeroBridge(overallProgress: number): boolean {
   const p = clamp01(overallProgress);
   return p >= HERO_BRIDGE_START_RATIO && p < HERO_BRIDGE_END_RATIO;
-}
-
-export function getHeroBridgeProgress(overallProgress: number): number {
-  const p = clamp01(overallProgress);
-  if (p <= HERO_BRIDGE_START_RATIO) return 0;
-  if (p >= HERO_BRIDGE_END_RATIO) return 1;
-  return (p - HERO_BRIDGE_START_RATIO) / HERO_BRIDGE_RATIO;
-}
-
-export function getHeroBridgeTextOpacity(overallProgress: number): number {
-  const bridgeP = getHeroBridgeProgress(overallProgress);
-  if (bridgeP <= 0 && !isInHeroBridge(overallProgress)) return 0;
-
-  const fadeIn = smoothstep(bridgeP / 0.28);
-  const fadeOut =
-    bridgeP > 0.68 ? 1 - smoothstep((bridgeP - 0.68) / 0.32) : 1;
-  return fadeIn * fadeOut;
 }
 
 export function isInStoryZones(overallProgress: number): boolean {
@@ -210,14 +192,6 @@ export function getZoneState(overallProgress: number): ZoneState {
   };
 }
 
-const READ_FADE_LOCAL = READ_FADE;
-const PHASE_FADE_LOCAL = PHASE_FADE;
-
-function smoothstep(t: number): number {
-  const x = clamp01(t);
-  return x * x * (3 - 2 * x);
-}
-
 function phaseCrossfade(localP: number, fadePortion: number): number {
   return smoothstep(localP / fadePortion);
 }
@@ -226,30 +200,12 @@ export function getStaticZoneOpacity(
   targetZone: number,
   overallProgress: number,
 ): number {
-  if (isInHeroIntro(overallProgress) || isInHeroBridge(overallProgress)) {
-    return 0;
-  }
+  if (!isInStoryZones(overallProgress)) return 0;
 
   const { zoneIndex, zoneLocalProgress } = getZoneState(overallProgress);
   if (zoneIndex !== targetZone) return 0;
 
-  const lastZone = SCROLL_ZONES.length - 1;
-  const p = zoneLocalProgress;
-
-  if (targetZone === 0) {
-    if (p > 1 - READ_FADE_LOCAL) return (1 - p) / READ_FADE_LOCAL;
-    return 1;
-  }
-
-  if (targetZone === lastZone) {
-    let opacity = p < READ_FADE_LOCAL ? p / READ_FADE_LOCAL : 1;
-    opacity *= getMeasuringTextOpacity(overallProgress);
-    return opacity;
-  }
-
-  if (p < READ_FADE_LOCAL) return p / READ_FADE_LOCAL;
-  if (p > 1 - READ_FADE_LOCAL) return (1 - p) / READ_FADE_LOCAL;
-  return 1;
+  return zoneReadOpacity(zoneLocalProgress);
 }
 
 /**
@@ -259,13 +215,12 @@ export function getHeroGlassFade(overallProgress: number): number {
   if (isInHeroIntro(overallProgress)) return 1;
   if (isInHeroBridge(overallProgress)) {
     const bridgeP = getHeroBridgeProgress(overallProgress);
-    return Math.max(0, 1 - smoothstep(bridgeP / 0.35));
+    return Math.max(0, 1 - smoothstep(bridgeP / READ_FADE));
   }
   const storyP = getStoryProgress(overallProgress);
   return Math.max(0, 1 - smoothstep(storyP / HERO_STORY_BLEND));
 }
 
-/** Translucidité sphère — indépendante du poids 3D Mesurer (w4) */
 const SPHERE_FADE_STORY = 0.3;
 const SPHERE_FADE_MEASURING = 0.14;
 
@@ -297,7 +252,7 @@ export function getSphereFadeMix(overallProgress: number): number {
 
 /**
  * Poids de mélange pour chaque phase 3D (0–4).
- * Fondu uniquement en sortie de zone pour éviter un double crossfade.
+ * Crossfade en fin de zone — même logique pour toutes les transitions story.
  */
 export function getPhaseWeights(overallProgress: number): number[] {
   if (isInHeroIntro(overallProgress) || isInHeroBridge(overallProgress)) {
@@ -308,7 +263,7 @@ export function getPhaseWeights(overallProgress: number): number[] {
     const weights = new Array(SCROLL_ZONES.length).fill(0);
     const outroT = getHeroOutroProgress(overallProgress);
     const lastZone = SCROLL_ZONES.length - 1;
-    weights[lastZone] = 1 - smoothstep(outroT / PHASE_FADE_LOCAL);
+    weights[lastZone] = 1 - smoothstep(outroT / PHASE_FADE);
     return weights;
   }
 
@@ -322,16 +277,10 @@ export function getPhaseWeights(overallProgress: number): number[] {
 
   const { zoneIndex, zoneLocalProgress } = getZoneState(overallProgress);
   const weights = new Array(SCROLL_ZONES.length).fill(0);
-  const lastZone = SCROLL_ZONES.length - 1;
   const p = zoneLocalProgress;
-  const fade = PHASE_FADE_LOCAL;
+  const fade = PHASE_FADE;
 
-  if (zoneIndex === lastZone) {
-    weights[lastZone] = 1;
-    return weights;
-  }
-
-  if (p > 1 - fade) {
+  if (p > 1 - fade && zoneIndex < SCROLL_ZONES.length - 1) {
     weights[zoneIndex] = phaseCrossfade(1 - p, fade);
     weights[zoneIndex + 1] = 1 - weights[zoneIndex];
   } else {
@@ -394,7 +343,7 @@ function blendAt(
   return lerpHex(from, to, t);
 }
 
-/** Fond de scène : blanc (0) → noir (pont) → bleu (1–5) → blanc (6) */
+/** Fond de scène : transitions uniquement aux frontières de zone */
 export function getHeroSceneBackground(overallProgress: number): string {
   const p = clamp01(overallProgress);
   const { white, black, blue } = palette;
@@ -408,9 +357,19 @@ export function getHeroSceneBackground(overallProgress: number): string {
   if (p < STORY_END_RATIO) {
     return blue;
   }
-  const outroBgBlend = STORY_END_RATIO + HERO_OUTRO_RATIO * 0.78;
-  if (p < outroBgBlend) {
-    return blue;
-  }
-  return blendAt(p, outroBgBlend, blue, white);
+  return blendAt(p, STORY_END_RATIO + HERO_OUTRO_RATIO, blue, white);
+}
+
+/** Texte outro blanc sur bleu — le fond ne passe au blanc qu’en fin de zone */
+export function getHeroOutroTextInverted(overallProgress: number): boolean {
+  return getHeroOutroLocalProgress(overallProgress) < 1 - READ_FADE;
+}
+
+/** Progression méthode au centre d’une zone (pour snap) */
+export function getMethodSnapProgress(
+  segmentStartRatio: number,
+  segmentSpanRatio: number,
+  localHold = ZONE_SNAP_HOLD,
+): number {
+  return segmentStartRatio + segmentSpanRatio * localHold;
 }

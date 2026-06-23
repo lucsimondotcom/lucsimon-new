@@ -1,6 +1,6 @@
 import { HERO_BRIDGE_CONTENT } from "@/data/heroContent";
 import { STORY_STEPS, STORY_TOTAL } from "@/data/storySteps";
-import { getMeasuringTextOpacity, getStaticZoneOpacity } from "@/lib/scrollZones";
+import { getStaticZoneOpacity } from "@/lib/scrollZones";
 import { StepTasks } from "./StepTasks";
 import { StoryScrollRail } from "./StoryScrollRail";
 
@@ -17,7 +17,6 @@ interface ScrollPanelsProps {
   inHeroIntro: boolean;
   inHeroBridge: boolean;
   inStoryZones: boolean;
-  outroTextProgress: number;
   reducedMotion: boolean;
 }
 
@@ -51,16 +50,10 @@ export function ScrollPanels({
   inHeroIntro,
   inHeroBridge,
   inStoryZones,
-  outroTextProgress,
   reducedMotion,
 }: ScrollPanelsProps) {
   const inverted = inStoryZones;
-  const measuringOpacity = getMeasuringTextOpacity(progress);
-  const hideStoryUi =
-    inHeroIntro ||
-    inHeroBridge ||
-    outroTextProgress > 0 ||
-    measuringOpacity < 0.02;
+  const hideStoryUi = !inStoryZones;
   const mobileOpacity = getStaticZoneOpacity(activeZone, progress);
 
   if (reducedMotion) {
@@ -169,10 +162,7 @@ export function ScrollPanels({
         />
       </div>
 
-      {!inHeroIntro &&
-        !inHeroBridge &&
-        outroTextProgress <= 0 &&
-        mobileOpacity > 0.01 && (
+      {!inHeroIntro && !inHeroBridge && inStoryZones && mobileOpacity > 0.01 && (
         <div
           className="absolute inset-x-0 bottom-10 px-8 lg:hidden"
           style={{ opacity: mobileOpacity }}

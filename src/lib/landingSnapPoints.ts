@@ -5,10 +5,10 @@ import {
 } from "@/lib/landingScroll";
 import { PROJECT_SNAP_HOLD } from "@/lib/projectsScroll";
 import {
+  getMethodSnapProgress,
   HERO_BRIDGE_RATIO,
   HERO_BRIDGE_START_RATIO,
   HERO_OUTRO_RATIO,
-  OUTRO_SNAP_HOLD,
   SCROLL_ZONES,
   STORY_END_RATIO,
   STORY_START_RATIO,
@@ -31,9 +31,6 @@ export interface LandingSnapPoint {
 /** Plus le pull est élevé, plus le snap accroche facilement */
 const RUBRIC_SNAP_PULL = 2.85;
 const SUB_SNAP_PULL = 1;
-
-const BRIDGE_METHOD_SNAP =
-  HERO_BRIDGE_START_RATIO + HERO_BRIDGE_RATIO * 0.48;
 
 function methodProgressFromStoryZone(
   zoneIndex: number,
@@ -65,7 +62,9 @@ function projectToLanding(projectStoryProgress: number): number {
 
 export function getExpertiseSubSnapPoints(): LandingSnapPoint[] {
   const bridge = {
-    progress: methodToLanding(BRIDGE_METHOD_SNAP),
+    progress: methodToLanding(
+      getMethodSnapProgress(HERO_BRIDGE_START_RATIO, HERO_BRIDGE_RATIO),
+    ),
     tier: "sub" as const,
   };
 
@@ -78,7 +77,7 @@ export function getExpertiseSubSnapPoints(): LandingSnapPoint[] {
 
   const outro = {
     progress: methodToLanding(
-      STORY_END_RATIO + HERO_OUTRO_RATIO * OUTRO_SNAP_HOLD,
+      getMethodSnapProgress(STORY_END_RATIO, HERO_OUTRO_RATIO),
     ),
     tier: "sub" as const,
   };

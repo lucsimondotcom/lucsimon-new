@@ -148,7 +148,6 @@ export function HolographicSystemHero() {
             inHeroIntro={false}
             inHeroBridge={false}
             inStoryZones={false}
-            outroTextProgress={0}
             reducedMotion
           />
         </div>
@@ -202,7 +201,6 @@ export function HolographicSystemHero() {
               inHeroIntro={inHeroIntro}
               inHeroBridge={inHeroBridge}
               inStoryZones={inStoryZones}
-              outroTextProgress={outroTextProgress}
               reducedMotion={false}
             />
           </>
