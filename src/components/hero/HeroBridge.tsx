@@ -12,7 +12,7 @@ export function HeroBridge({ textOpacity }: HeroBridgeProps) {
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-10 flex items-center px-8 sm:px-12 lg:px-20"
+      className="pointer-events-none absolute inset-0 z-10 flex items-center px-4 sm:px-12 lg:px-20"
       style={{
         opacity: reveal,
         transform: `translate3d(0, ${translateY}px, 0)`,
@@ -20,7 +20,7 @@ export function HeroBridge({ textOpacity }: HeroBridgeProps) {
       }}
       aria-hidden={reveal < 0.05}
     >
-      <h2 className="max-w-5xl font-display text-[1.65rem] leading-[1.08] text-[#F5F5F5] sm:text-4xl sm:leading-[1.05] lg:text-6xl xl:text-8xl lg:max-w-7xl">
+      <h2 className="max-w-5xl font-display text-[2rem] leading-[1.08] text-[#F5F5F5] sm:text-4xl sm:leading-[1.05] lg:text-6xl xl:text-8xl lg:max-w-7xl">
         Je transforme <span className="underline-with-blue">des besoins</span>{" "}
         métiers <span className="underline-with-blue">en solutions digitales</span>{" "}
         sur mesure{" "}

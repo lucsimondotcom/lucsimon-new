@@ -12,17 +12,22 @@ import { LANDING_SECTIONS, SITE_MENU, sectionHref } from "@/data/siteNav";
 const headerBaseClass =
   "text-xs font-medium tracking-wide uppercase transition-colors duration-300";
 
+const MOBILE_HEADER_ICON_SIZE = "h-7 w-7";
+const MOBILE_MENU_ICON_HEIGHT = "h-4";
+
 function ProfileLink({
   className = "",
   borderClass,
+  sizeClass = "h-8 w-8",
 }: {
   className?: string;
   borderClass: string;
+  sizeClass?: string;
 }) {
   return (
     <Link
       href={sectionHref(LANDING_SECTIONS.aPropos)}
-      className={`relative block h-8 w-8 shrink-0 overflow-hidden rounded-full border transition-colors duration-300 ${borderClass} hover:opacity-80 ${className}`}
+      className={`relative block shrink-0 overflow-hidden rounded-full transition-colors duration-300 ${sizeClass} ${borderClass} hover:opacity-80 ${className}`}
       aria-label="À propos de Luc Simon"
     >
       <Image
@@ -30,7 +35,7 @@ function ProfileLink({
         alt=""
         fill
         className="object-cover"
-        sizes="32px"
+        sizes={sizeClass.includes("h-7") ? "28px" : "32px"}
       />
     </Link>
   );
@@ -38,10 +43,13 @@ function ProfileLink({
 
 function MenuIcon({ open }: { open: boolean }) {
   return (
-    <span className="relative flex h-3.5 w-4 shrink-0 flex-col justify-between" aria-hidden>
+    <span
+      className={`relative flex ${MOBILE_MENU_ICON_HEIGHT} w-5 shrink-0 flex-col justify-between`}
+      aria-hidden
+    >
       <span
         className={`block h-px w-full bg-current transition-transform duration-200 ${
-          open ? "translate-y-[6.5px] rotate-45" : ""
+          open ? "translate-y-[13px] rotate-45" : ""
         }`}
       />
       <span
@@ -51,7 +59,7 @@ function MenuIcon({ open }: { open: boolean }) {
       />
       <span
         className={`block h-px w-full bg-current transition-transform duration-200 ${
-          open ? "-translate-y-[6.5px] -rotate-45" : ""
+          open ? "-translate-y-[13px] -rotate-45" : ""
         }`}
       />
     </span>
@@ -107,24 +115,28 @@ export function Header() {
   const { tone, navSection } = useHeaderScroll();
   const styles = HEADER_TONE_STYLES[tone];
   const { menuOpen, closeMenu, toggleMenu } = useSiteMenu();
+  const mobileMenuStyles = HEADER_TONE_STYLES["on-dark"];
 
   return (
     <header
       id="site-header"
-      className="fixed inset-x-0 top-0 z-[66]"
+      className={`fixed inset-x-0 top-0 ${menuOpen ? "z-[68]" : "z-[66]"}`}
       data-header-tone={tone}
     >
       <div className="relative mx-auto flex h-12 w-full items-center justify-between px-4 sm:px-12 lg:h-16 lg:px-20">
         <div className="flex min-w-0 items-center gap-3">
           <ProfileLink
             className="lg:hidden"
-            borderClass={styles.profileBorder}
+            borderClass={
+              menuOpen ? mobileMenuStyles.profileBorder : styles.profileBorder
+            }
+            sizeClass={MOBILE_HEADER_ICON_SIZE}
           />
           <Link
             href="/"
-            className={`font-logo shrink-0 ${headerBaseClass} ${styles.text} ${styles.hover} ${
-              menuOpen ? "relative z-[68]" : ""
-            }`}
+            className={`font-logo shrink-0 ${headerBaseClass} ${
+              menuOpen ? mobileMenuStyles.text : styles.text
+            } ${menuOpen ? mobileMenuStyles.hover : styles.hover}`}
             onClick={() => {
               if (menuOpen) closeMenu();
             }}
@@ -164,9 +176,9 @@ export function Header() {
 
           <button
             type="button"
-            className={`flex items-center gap-2.5 lg:hidden ${headerBaseClass} ${styles.text} ${styles.hover} ${
-              menuOpen ? "relative z-[68]" : ""
-            }`}
+            className={`flex items-center gap-2.5 lg:hidden ${headerBaseClass} ${
+              menuOpen ? mobileMenuStyles.text : styles.text
+            } ${menuOpen ? mobileMenuStyles.hover : styles.hover}`}
             aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={menuOpen}
             aria-controls="site-menu-panel"
@@ -179,6 +191,7 @@ export function Header() {
           <ProfileLink
             className={`hidden lg:block ${menuOpen ? "relative z-[68]" : ""}`}
             borderClass={styles.profileBorder}
+            sizeClass="h-8 w-8"
           />
         </div>
       </div>

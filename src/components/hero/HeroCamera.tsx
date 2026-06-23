@@ -7,9 +7,17 @@ import {
   getHeroOutroProgress,
   getStoryProgress,
   isInHeroIntro,
+  isInStoryZones,
   STORY_CAMERA_RAMP,
 } from "@/lib/scrollZones";
-import { HERO_CAMERA, HERO_OUTRO_CAMERA, MOBILE_CAMERA, STORY_CAMERA, lerpHero } from "./heroMotion";
+import {
+  HERO_CAMERA,
+  HERO_OUTRO_CAMERA,
+  MOBILE_CAMERA,
+  MOBILE_STORY_CAMERA,
+  STORY_CAMERA,
+  lerpHero,
+} from "./heroMotion";
 
 function isMobileViewport(): boolean {
   if (typeof window === "undefined") return false;
@@ -21,22 +29,41 @@ function applyMobileCamera(
   camZ: number,
   lookY: number,
   fov: number,
+  options: { storyWeight: number; outro?: boolean },
 ): { camY: number; camZ: number; lookY: number; fov: number } {
   if (!isMobileViewport()) {
     return { camY, camZ, lookY, fov };
   }
 
+  const { storyWeight, outro = false } = options;
+
+  if (storyWeight > 0) {
+    const w = storyWeight;
+    return {
+      camY: camY + MOBILE_STORY_CAMERA.camYDelta * w,
+      camZ: camZ + MOBILE_STORY_CAMERA.zOffset * w,
+      lookY: lookY + MOBILE_STORY_CAMERA.lookYDelta * w,
+      fov: fov + MOBILE_STORY_CAMERA.fovOffset * w,
+    };
+  }
+
+  const touch = outro ? 0.55 : 1;
   return {
-    camY: camY + MOBILE_CAMERA.yOffset,
-    camZ: camZ + MOBILE_CAMERA.zOffset,
-    lookY: lookY + MOBILE_CAMERA.lookYOffset,
-    fov: fov + MOBILE_CAMERA.fovOffset,
+    camY: camY + MOBILE_CAMERA.yOffset * touch,
+    camZ: camZ + MOBILE_CAMERA.zOffset * touch,
+    lookY: lookY + MOBILE_CAMERA.lookYOffset * touch,
+    fov: fov + MOBILE_CAMERA.fovOffset * touch,
   };
 }
 
 function smoothstep01(t: number): number {
   const x = Math.min(1, Math.max(0, t));
   return x * x * (3 - 2 * x);
+}
+
+function getStoryMobileWeight(progress: number, storyT: number): number {
+  if (isInStoryZones(progress)) return 1;
+  return smoothstep01(storyT);
 }
 
 export function HeroCamera({
@@ -62,7 +89,10 @@ export function HeroCamera({
       );
       const fov = THREE.MathUtils.lerp(STORY_CAMERA.fov, HERO_OUTRO_CAMERA.fovEnd, outroT);
 
-      const mobile = applyMobileCamera(camY, camZ, lookY, fov);
+      const mobile = applyMobileCamera(camY, camZ, lookY, fov, {
+        storyWeight: 0,
+        outro: true,
+      });
       camera.position.set(0, mobile.camY, mobile.camZ);
       lookTarget.current.set(0, mobile.lookY, 0);
       camera.lookAt(lookTarget.current);
@@ -88,7 +118,8 @@ export function HeroCamera({
     const lookY = THREE.MathUtils.lerp(heroLookY, STORY_CAMERA.lookY, storyT);
     const fov = THREE.MathUtils.lerp(heroFov, STORY_CAMERA.fov, storyT);
 
-    const mobile = applyMobileCamera(camY, camZ, lookY, fov);
+    const storyWeight = getStoryMobileWeight(progress, storyT);
+    const mobile = applyMobileCamera(camY, camZ, lookY, fov, { storyWeight });
     camera.position.set(0, mobile.camY, mobile.camZ);
     lookTarget.current.set(0, mobile.lookY, 0);
     camera.lookAt(lookTarget.current);

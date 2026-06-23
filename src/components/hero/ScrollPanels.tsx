@@ -169,7 +169,7 @@ export function ScrollPanels({
         >
           <StepNumber number={STORY_STEPS[activeZone].number} inverted={inverted} />
           <h2
-            className={`mt-3 text-xl tracking-tight ${
+            className={`mt-3 text-4xl tracking-tight ${
               inverted ? "text-white" : "text-foreground"
             }`}
           >

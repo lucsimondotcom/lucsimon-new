@@ -31,12 +31,20 @@ export const STORY_CAMERA = {
   lookY: 0,
 } as const;
 
-/** Cadrage mobile — sphère plus haute, caméra reculée */
+/** Cadrage mobile intro / bridge / outro */
 export const MOBILE_CAMERA = {
-  yOffset: 0.38,
-  zOffset: 1.05,
-  fovOffset: 6,
-  lookYOffset: -0.12,
+  yOffset: 0.18,
+  zOffset: 0.65,
+  fovOffset: 4,
+  lookYOffset: -0.08,
+} as const;
+
+/** Étapes 1–5 : sphère plus petite, dans la moitié haute */
+export const MOBILE_STORY_CAMERA = {
+  camYDelta: -0.68,
+  lookYDelta: -0.76,
+  zOffset: 1.55,
+  fovOffset: 9,
 } as const;
 
 export function lerpHero(
