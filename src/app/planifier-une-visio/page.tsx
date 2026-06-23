@@ -3,19 +3,13 @@ import { PageShell } from "@/components/layout/PageShell";
 import { SectionLabel } from "@/components/sections/SectionLabel";
 import { VideoCallIcon } from "@/components/icons/VideoCallIcon";
 import { CONTACT_EMAIL, VISIO_MAILTO } from "@/data/siteNav";
+import { VISIO_INTRO, VISIO_POINTS } from "@/data/visio";
 
 export const metadata: Metadata = {
   title: "Planifier une visio — Luc Simon",
   description:
     "Échange de 30 minutes pour cadrer votre contexte et identifier la prochaine étape concrète.",
 };
-
-const VISIO_POINTS = [
-  "Comprendre votre contexte et vos objectifs",
-  "Identifier les points de friction actuels",
-  "Esquisser une trajectoire réaliste",
-  "Définir si et comment collaborer",
-] as const;
 
 export default function PlanifierVisioPage() {
   return (
@@ -27,8 +21,7 @@ export default function PlanifierVisioPage() {
             Planifier une visio
           </h1>
           <p className="mt-6 text-base leading-relaxed text-muted sm:text-lg">
-            Un échange de 30 minutes, sans engagement, pour faire le point sur
-            votre système web et la prochaine étape utile.
+            {VISIO_INTRO}
           </p>
 
           <ul className="mt-12 space-y-4 text-left">
@@ -37,7 +30,7 @@ export default function PlanifierVisioPage() {
                 key={point}
                 className="flex items-start gap-3 rounded-xl border border-border/70 bg-[var(--surface)] px-5 py-4 text-sm text-muted"
               >
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-soft-accent" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                 {point}
               </li>
             ))}

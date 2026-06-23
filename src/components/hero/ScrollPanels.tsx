@@ -1,3 +1,4 @@
+import { HERO_BRIDGE_CONTENT } from "@/data/heroContent";
 import { STORY_STEPS, STORY_TOTAL } from "@/data/storySteps";
 import { getMeasuringTextOpacity, getStaticZoneOpacity } from "@/lib/scrollZones";
 import { StepTasks } from "./StepTasks";
@@ -14,15 +15,29 @@ interface ScrollPanelsProps {
   zoneLocalProgress: number;
   storyProgress: number;
   inHeroIntro: boolean;
+  inHeroBridge: boolean;
+  inStoryZones: boolean;
   outroTextProgress: number;
   reducedMotion: boolean;
 }
 
-function StepNumber({ number }: { number: string }) {
+function StepNumber({
+  number,
+  inverted,
+}: {
+  number: string;
+  inverted: boolean;
+}) {
   return (
-    <p className="text-sm font-medium tracking-wide text-accent">
+    <p
+      className={`text-sm font-medium tracking-wide ${
+        inverted ? "text-white" : "text-accent"
+      }`}
+    >
       <span className="text-2xl">{number}</span>
-      <span className="mx-2.5 text-soft-accent/60">/</span>
+      <span className={`mx-2.5 ${inverted ? "text-white/40" : "text-accent/40"}`}>
+        /
+      </span>
       <span>{String(STORY_TOTAL).padStart(2, "0")}</span>
     </p>
   );
@@ -34,32 +49,49 @@ export function ScrollPanels({
   zoneLocalProgress,
   storyProgress,
   inHeroIntro,
+  inHeroBridge,
+  inStoryZones,
   outroTextProgress,
   reducedMotion,
 }: ScrollPanelsProps) {
+  const inverted = inStoryZones;
   const measuringOpacity = getMeasuringTextOpacity(progress);
   const hideStoryUi =
-    inHeroIntro || outroTextProgress > 0 || measuringOpacity < 0.02;
+    inHeroIntro ||
+    inHeroBridge ||
+    outroTextProgress > 0 ||
+    measuringOpacity < 0.02;
   const mobileOpacity = getStaticZoneOpacity(activeZone, progress);
+
   if (reducedMotion) {
     return (
       <div className="relative z-10 space-y-20 overflow-y-auto px-8 py-32 sm:px-12 lg:px-20">
+        <div className="rounded-2xl bg-[#0A0A0A] px-8 py-16 sm:px-12">
+          <h2 className="max-w-4xl font-display text-4xl leading-tight text-[#F5F5F5] sm:text-5xl">
+            {HERO_BRIDGE_CONTENT.headline}
+          </h2>
+        </div>
         {STORY_STEPS.map((step) => (
           <div
             key={step.id}
-            className="grid gap-8 lg:grid-cols-2 lg:gap-16"
+            className="grid gap-8 rounded-2xl bg-accent px-8 py-12 lg:grid-cols-2 lg:gap-16"
           >
             <div className="max-w-md">
-              <StepNumber number={step.number} />
-              <h2 className="mt-4 text-3xl tracking-tight text-foreground">
+              <StepNumber number={step.number} inverted />
+              <h2 className="mt-4 text-3xl tracking-tight text-white">
                 {step.title}
               </h2>
-              <p className="mt-4 text-sm leading-relaxed text-muted">
+              <p className="mt-4 text-sm leading-relaxed text-white/65">
                 {step.description}
               </p>
             </div>
             <div className="max-w-xs lg:pt-10">
-              <StepTasks tasks={step.tasks} zoneLocalProgress={1} allChecked />
+              <StepTasks
+                tasks={step.tasks}
+                zoneLocalProgress={1}
+                allChecked
+                inverted
+              />
             </div>
           </div>
         ))}
@@ -77,14 +109,22 @@ export function ScrollPanels({
               key={step.id}
               className="absolute inset-0 flex flex-col justify-center pl-20 xl:pl-24"
               style={{ opacity }}
-              aria-hidden={activeZone !== index || inHeroIntro}
+              aria-hidden={activeZone !== index || inHeroIntro || inHeroBridge}
             >
               <div className="max-w-sm">
-                <StepNumber number={step.number} />
-                <h2 className="mt-8 text-3xl tracking-tight text-foreground xl:text-6xl">
+                <StepNumber number={step.number} inverted={inverted} />
+                <h2
+                  className={`mt-8 text-3xl tracking-tight xl:text-6xl ${
+                    inverted ? "text-white" : "text-foreground"
+                  }`}
+                >
                   {step.title}
                 </h2>
-                <p className="mt-5 max-w-xs text-base text-muted">
+                <p
+                  className={`mt-5 max-w-xs text-base ${
+                    inverted ? "text-white/65" : "text-muted"
+                  }`}
+                >
                   {step.description}
                 </p>
               </div>
@@ -103,10 +143,14 @@ export function ScrollPanels({
               key={`${step.id}-tasks`}
               className={`absolute inset-y-0 flex flex-col justify-center ${TASKS_INSET}`}
               style={{ opacity }}
-              aria-hidden={activeZone !== index || inHeroIntro}
+              aria-hidden={activeZone !== index || inHeroIntro || inHeroBridge}
             >
               <div className="max-w-[220px]">
-                <StepTasks tasks={step.tasks} zoneLocalProgress={taskProgress} />
+                <StepTasks
+                  tasks={step.tasks}
+                  zoneLocalProgress={taskProgress}
+                  inverted={inverted}
+                />
               </div>
             </div>
           );
@@ -121,25 +165,38 @@ export function ScrollPanels({
         <StoryScrollRail
           activeZone={activeZone}
           storyProgress={storyProgress}
+          inverted={inverted}
         />
       </div>
 
-      {!inHeroIntro && outroTextProgress <= 0 && mobileOpacity > 0.01 && (
+      {!inHeroIntro &&
+        !inHeroBridge &&
+        outroTextProgress <= 0 &&
+        mobileOpacity > 0.01 && (
         <div
           className="absolute inset-x-0 bottom-10 px-8 lg:hidden"
           style={{ opacity: mobileOpacity }}
         >
-          <StepNumber number={STORY_STEPS[activeZone].number} />
-          <h2 className="mt-3 text-xl tracking-tight text-foreground">
+          <StepNumber number={STORY_STEPS[activeZone].number} inverted={inverted} />
+          <h2
+            className={`mt-3 text-xl tracking-tight ${
+              inverted ? "text-white" : "text-foreground"
+            }`}
+          >
             {STORY_STEPS[activeZone].title}
           </h2>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
+          <p
+            className={`mt-3 max-w-sm text-sm leading-relaxed ${
+              inverted ? "text-white/65" : "text-muted"
+            }`}
+          >
             {STORY_STEPS[activeZone].description}
           </p>
           <div className="mt-5">
             <StepTasks
               tasks={STORY_STEPS[activeZone].tasks}
               zoneLocalProgress={zoneLocalProgress}
+              inverted={inverted}
             />
           </div>
         </div>

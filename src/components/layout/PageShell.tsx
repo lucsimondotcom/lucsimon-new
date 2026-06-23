@@ -8,7 +8,7 @@ interface PageShellProps {
 export function PageShell({ children, className = "" }: PageShellProps) {
   return (
     <main
-      className={`min-h-screen bg-[var(--background-gradient)] pt-12 lg:pt-16 ${className}`}
+      className={`min-h-screen bg-background pt-12 lg:pt-16 ${className}`}
     >
       {children}
     </main>

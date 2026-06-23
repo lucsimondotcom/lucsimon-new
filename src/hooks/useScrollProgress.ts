@@ -4,13 +4,16 @@ import { useEffect, useState, type RefObject } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
+  getHeroBridgeTextOpacity,
   getHeroIntroProgress,
   getHeroOutroProgress,
-  getHeroOutroTextProgress,
+  getHeroOutroTextOpacity,
   getStoryProgress,
   getZoneState,
+  isInHeroBridge,
   isInHeroIntro,
   isInHeroOutro,
+  isInStoryZones,
 } from "@/lib/scrollZones";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -27,6 +30,9 @@ export interface ScrollProgressState {
   outroTextProgress: number;
   storyProgress: number;
   inHeroIntro: boolean;
+  inHeroBridge: boolean;
+  inStoryZones: boolean;
+  bridgeTextOpacity: number;
   inHeroOutro: boolean;
   activeZone: number;
   zoneLocalProgress: number;
@@ -42,6 +48,9 @@ export function useScrollProgress(
   const [outroTextProgress, setOutroTextProgress] = useState(0);
   const [storyProgress, setStoryProgress] = useState(0);
   const [inHeroIntro, setInHeroIntro] = useState(true);
+  const [inHeroBridge, setInHeroBridge] = useState(false);
+  const [inStoryZones, setInStoryZones] = useState(false);
+  const [bridgeTextOpacity, setBridgeTextOpacity] = useState(0);
   const [inHeroOutro, setInHeroOutro] = useState(false);
   const [activeZone, setActiveZone] = useState(0);
   const [zoneLocalProgress, setZoneLocalProgress] = useState(0);
@@ -67,6 +76,9 @@ export function useScrollProgress(
       setOutroTextProgress(0);
       setStoryProgress(0);
       setInHeroIntro(false);
+      setInHeroBridge(false);
+      setInStoryZones(false);
+      setBridgeTextOpacity(0);
       setInHeroOutro(false);
       setActiveZone(0);
       setZoneLocalProgress(0);
@@ -85,9 +97,12 @@ export function useScrollProgress(
           setProgress(p);
           setHeroProgress(getHeroIntroProgress(p));
           setOutroProgress(getHeroOutroProgress(p));
-          setOutroTextProgress(getHeroOutroTextProgress(p));
+          setOutroTextProgress(getHeroOutroTextOpacity(p));
           setStoryProgress(getStoryProgress(p));
           setInHeroIntro(isInHeroIntro(p));
+          setInHeroBridge(isInHeroBridge(p));
+          setInStoryZones(isInStoryZones(p));
+          setBridgeTextOpacity(getHeroBridgeTextOpacity(p));
           setInHeroOutro(isInHeroOutro(p));
           setActiveZone(zone.zoneIndex);
           setZoneLocalProgress(zone.zoneLocalProgress);
@@ -105,6 +120,9 @@ export function useScrollProgress(
     outroTextProgress,
     storyProgress,
     inHeroIntro,
+    inHeroBridge,
+    inStoryZones,
+    bridgeTextOpacity,
     inHeroOutro,
     activeZone,
     zoneLocalProgress,

@@ -8,19 +8,19 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--text-secondary);
   --color-accent: var(--accent);
-  --color-soft-accent: var(--soft-accent);
   --color-border: var(--border);
   --color-on-accent: var(--on-accent);
-  --font-sans: var(--font-safiro-regular), var(--font-dm-sans), serif;
-  --font-display: var(--font-safiro-italic), var(--font-dm-sans), serif;
-  --font-chrome: var(--font-safiro-regular), var(--font-dm-sans), serif;
+  --font-sans: var(--font-neue-haas-roman), sans-serif;
+  --font-display: var(--font-safiro-regular), serif;  
+  --font-display-italic: var(--font-safiro-italic), serif;
+  --font-logo: var(--font-neue-haas-medium), sans-serif;
 }
+
 
 h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-style: italic;
   font-weight: 400;
 }
 
@@ -151,4 +151,15 @@ body.is-loading {
     background: var(--scrollbar-thumb);
     border-radius: 999px;
   }
+}
+
+
+.underline-with-blue {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 5px;
+  text-underline-offset: 9px;
+
+  font-family: var(--font-display-italic);
+  letter-spacing: -0.04em;
 }

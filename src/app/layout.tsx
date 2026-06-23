@@ -1,22 +1,21 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { Providers } from "@/components/Providers";
 import { ThemeVars } from "@/components/ThemeVars";
 import { CRITICAL_LOADER_CSS } from "@/lib/criticalLoaderCss";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const neueHaasRoman = localFont({
+  src: "../../public/fonts/NeueHaasDisplay-Roman.woff2",
+  variable: "--font-neue-haas-roman",
+  weight: "400",
+  display: "swap",
 });
 
-const safiroItalic = localFont({
-  src: "../../public/fonts/safiro-regular-i.woff2",
-  variable: "--font-safiro-italic",
-  weight: "400",
-  style: "italic",
+const neueHaasMedium = localFont({
+  src: "../../public/fonts/NeueHaasDisplay-Mediu.woff2",
+  variable: "--font-neue-haas-medium",
+  weight: "500",
   display: "swap",
 });
 
@@ -24,6 +23,14 @@ const safiroRegular = localFont({
   src: "../../public/fonts/safiro-regular.woff2",
   variable: "--font-safiro-regular",
   weight: "400",
+  display: "swap",
+});
+
+const safiroItalic = localFont({
+  src: "../../public/fonts/safiro-regular-i.woff2",
+  variable: "--font-safiro-italic",
+  weight: "400",
+  style: "italic",
   display: "swap",
 });
 
@@ -41,7 +48,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${dmSans.variable} ${safiroItalic.variable} ${safiroRegular.variable} h-full`}
+      className={`${neueHaasRoman.variable} ${neueHaasMedium.variable} ${safiroItalic.variable} h-full`}
       suppressHydrationWarning
     >
       <head>

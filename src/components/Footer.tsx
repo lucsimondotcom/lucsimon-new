@@ -3,7 +3,7 @@ import { SITE_NAV, VISIO_PAGE, CONTACT_EMAIL } from "@/data/siteNav";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/80 bg-[var(--surface-subtle)] px-8 py-14 text-xs font-chrome sm:px-12 lg:px-20">
+    <footer className="border-t border-border/80 bg-[var(--surface-subtle)] px-8 py-14 text-xs sm:px-12 lg:px-20">
       <div className="mx-auto flex max-w-6xl flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <Link

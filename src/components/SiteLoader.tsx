@@ -152,7 +152,7 @@ export function SiteLoader() {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[9999] flex flex-col bg-background font-chrome text-foreground will-change-[opacity]"
+      className="fixed inset-0 z-[9999] flex flex-col bg-background text-foreground will-change-[opacity]"
       aria-live="polite"
       aria-busy={displayProgress < 100}
       aria-label="Chargement du site"

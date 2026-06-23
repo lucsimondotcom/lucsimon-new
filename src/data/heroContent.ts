@@ -9,6 +9,10 @@ export const HERO_CONTENT = {
   ],
 };
 
+export const HERO_BRIDGE_CONTENT = {
+  headline: "Cinq étapes pour transformer la complexité en résultats.",
+};
+
 export const HERO_OUTRO_CONTENT = {
   hint: "Les résultats ne sont jamais le fruit du hasard. Ils sont le résultat d’une méthode.",
 };

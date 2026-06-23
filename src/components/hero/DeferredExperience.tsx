@@ -44,8 +44,8 @@ export function DeferredExperience() {
   if (!showExperience) {
     return (
       <section
-        id="experience"
-        className="h-screen bg-background"
+        id="methode"
+        className="h-screen scroll-mt-12 bg-background lg:scroll-mt-16"
         aria-hidden
       />
     );

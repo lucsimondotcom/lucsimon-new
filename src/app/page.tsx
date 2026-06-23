@@ -1,11 +1,13 @@
 import { DeferredExperience } from "@/components/hero/DeferredExperience";
-import { CtaSection } from "@/components/sections/CtaSection";
+import { AboutSection } from "@/components/sections/AboutSection";
+import { VisioSection } from "@/components/sections/VisioSection";
 
 export default function Home() {
   return (
-    <main className="bg-[var(--background-gradient)]">
+    <main className="bg-background">
       <DeferredExperience />
-      <CtaSection />
+      <AboutSection />
+      <VisioSection />
     </main>
   );
 }

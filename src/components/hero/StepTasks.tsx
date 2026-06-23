@@ -1,9 +1,17 @@
 import { getTaskCheckProgress } from "@/lib/scrollZones";
 
-function TaskCheck({ progress }: { progress: number }) {
+function TaskCheck({
+  progress,
+  inverted = false,
+}: {
+  progress: number;
+  inverted?: boolean;
+}) {
   return (
     <span
-      className="inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center text-accent"
+      className={`inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center ${
+        inverted ? "text-white" : "text-accent"
+      }`}
       style={{
         opacity: progress,
         transform: `scale(${0.55 + progress * 0.45})`,
@@ -27,9 +35,15 @@ interface StepTasksProps {
   tasks: string[];
   zoneLocalProgress: number;
   allChecked?: boolean;
+  inverted?: boolean;
 }
 
-export function StepTasks({ tasks, zoneLocalProgress, allChecked }: StepTasksProps) {
+export function StepTasks({
+  tasks,
+  zoneLocalProgress,
+  allChecked,
+  inverted = false,
+}: StepTasksProps) {
   return (
     <ul className="space-y-4">
       {tasks.map((task, index) => {
@@ -40,9 +54,11 @@ export function StepTasks({ tasks, zoneLocalProgress, allChecked }: StepTasksPro
         return (
           <li
             key={task}
-            className="flex items-center gap-3 text-[11px] font-normal tracking-[0.16em] text-muted uppercase"
+            className={`flex items-center gap-3 text-[11px] font-normal tracking-[0.16em] uppercase ${
+              inverted ? "text-white/55" : "text-muted"
+            }`}
           >
-            <TaskCheck progress={checkProgress} />
+            <TaskCheck progress={checkProgress} inverted={inverted} />
             <span
               style={{
                 opacity: 0.45 + checkProgress * 0.55,

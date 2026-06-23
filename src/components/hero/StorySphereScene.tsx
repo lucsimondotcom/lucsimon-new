@@ -6,8 +6,8 @@ import { Line } from "@react-three/drei";
 import * as THREE from "three";
 import {
   getPhaseWeights,
-  getHeroGlassFade,
   getHeroOutroProgress,
+  getSphereFadeMix,
 } from "@/lib/scrollZones";
 import { theme } from "@/lib/designTokens";
 import {
@@ -182,7 +182,7 @@ export function StorySphereScene({
   const outroFloorFade = inOutro ? 1 - outroProgress : 1;
   const shadowStrength =
     0.62 * Math.max(0.15, 1 - w4 * 0.55) * outroFloorFade;
-  const heroGlassFade = getHeroGlassFade(progress);
+  const sphereFadeMix = getSphereFadeMix(progress);
 
   useFrame((_, delta) => {
     if (!reducedMotion) elapsedRef.current += delta;
@@ -266,7 +266,7 @@ export function StorySphereScene({
 
       <GlassSphere
         radius={SPHERE_RADIUS}
-        fadeMix={Math.max(heroGlassFade, w4)}
+        fadeMix={sphereFadeMix}
         glowMix={w3}
       />
 

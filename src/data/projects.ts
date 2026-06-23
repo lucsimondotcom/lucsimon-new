@@ -134,7 +134,7 @@ export const PROJECTS: Project[] = [
     image: "/projects/outil-interne.svg",
     detail: {
       subtitle:
-        "Remplacement d'un empilement de spreadsheets par un outil unifié : projets, planning et facturation.",
+        "Conception et pilotage d’un écosystème digital complet autour d’un objet connecté, intégrant applications mobiles, backend, plateforme web et e-commerce.",
       visuals: [
         { src: "/projects/mockup-e-tonus-1.jpg", alt: "E-Tonus mockup 1" },
         { src: "/projects/mockup-e-tonus-2.jpg", alt: "E-Tonus mockup 2" },

@@ -23,77 +23,92 @@ function toGlslVec3(hex: string) {
   return `vec3(${r.toFixed(4)}, ${g.toFixed(4)}, ${b.toFixed(4)})`;
 }
 
+export const palette = {
+  black: "#0A0A0A",
+  blue: "#2847F5",
+  white: "#F5F5F5",
+} as const;
+
 export const theme = {
-  /** UI & fond de page */
-  background: "#F5F3FF",
-  backgroundEdge: "#EBE8FF",
-  foreground: "#2b2b31",
-  muted: "#646477",
-  accent: "#6973D8",
-  softAccent: "#B0B0FF",
-  border: "#D4D2E8",
-  onAccent: "#F4F3F8",
+  palette,
+
+  /** UI — noir, bleu, blanc uniquement */
+  background: palette.white,
+  foreground: palette.black,
+  muted: withAlpha(palette.black, 0.55),
+  accent: palette.blue,
+  border: withAlpha(palette.black, 0.12),
+  onAccent: palette.white,
 
   surface: {
-    base: withAlpha("#FFFFFF", 0.42),
-    hover: withAlpha("#FFFFFF", 0.58),
-    subtle: withAlpha("#FFFFFF", 0.24),
-    panel: withAlpha("#F5F3FF", 0.92),
-    card: withAlpha("#FFFFFF", 0.52),
-    menuHover: withAlpha("#FFFFFF", 0.45),
+    base: withAlpha(palette.white, 0.72),
+    hover: withAlpha(palette.white, 0.88),
+    subtle: withAlpha(palette.black, 0.04),
+    panel: withAlpha(palette.white, 0.92),
+    card: withAlpha(palette.white, 0.8),
+    menuHover: withAlpha(palette.white, 0.65),
   },
 
   scrollbar: {
-    track: "#E8E4F8",
-    thumb: "#C5C0E0",
-    thumbHover: "#B0B0FF",
-    thumbActive: "#9090D8",
-    glow: withAlpha("#B0B0FF", 0.22),
-    gradientStart: "#D8D4F0",
+    track: withAlpha(palette.black, 0.06),
+    thumb: withAlpha(palette.black, 0.2),
+    thumbHover: withAlpha(palette.black, 0.35),
+    thumbActive: palette.blue,
+    glow: withAlpha(palette.blue, 0.18),
+    gradientStart: withAlpha(palette.black, 0.14),
   },
 
-  overlay: withAlpha("#1A1A40", 0.1),
+  overlay: withAlpha(palette.black, 0.1),
 
-  /** Scène Three.js */
+  /**
+   * Scène Three.js — dérivée du noir / bleu / blanc UI.
+   * Lisible sur fond noir (pont) et bleu (expertise).
+   */
   scene: {
-    orbitLine: "#7870C8",
-    orbitNode: "#9088D8",
-    floorRing: "#E8B0F0",
-    floorRingOuter: "#D0A0E8",
-    floorShadow: "#9888B8",
-    shadowCore: "#8060A0",
-    shadowReflection: "#D8C8F0",
-    floorDot: "#9080B0",
+    /** Orbites, arêtes cube, sphères fil de fer */
+    orbitLine: "#6B85FF",
+    /** Points d’étape, électrons */
+    orbitNode: "#E8EEFF",
+    /** Anneaux au sol */
+    floorRing: "#3D5FD9",
+    floorRingOuter: "#5575F2",
+    floorShadow: "#1A2E7A",
+    shadowCore: "#0D1848",
+    shadowReflection: palette.white,
+    floorDot: "#5A72F0",
   },
 
   lights: {
-    ambient: "#EBE8FF",
-    key: "#F0EEFF",
-    fill: "#9080D8",
-    rim: "#70C8E8",
-    warm: "#D8B0E8",
-    pointA: "#C8B8E8",
-    pointB: "#8880C8",
+    ambient: palette.white,
+    key: palette.white,
+    fill: "#5575F2",
+    rim: "#A8BCFF",
+    warm: "#7B9AFF",
+    pointA: "#8899FF",
+    pointB: "#4466EE",
   },
 
-  /** Sphère — verre physique + iridescence */
+  /**
+   * Sphère holographique — dégradé bleu (plus de magenta / cyan / violet).
+   * Noms conservés pour le shader GLSL (cyan, magenta, violet, mint).
+   */
   sphere: {
-    pearl: "#F8F6FF",
-    cyan: "#A0F0FF",
-    magenta: "#FF80FF",
-    violet: "#C0A0FF",
-    mint: "#98FFD8",
-    innerGlow: "#E6E0F8",
-    glassBody: "#E4E0F8",
-    attenuation: "#A888D8",
-    rimWhite: "#F0EEFF",
-    glassTint: "#E0E4F8",
-    specBroad: "#E8ECFA",
-    specFill: "#D8E0F8",
+    pearl: palette.white,
+    cyan: "#5B7AFF",
+    magenta: "#4466EE",
+    violet: palette.blue,
+    mint: "#C5D4FF",
+    innerGlow: palette.white,
+    glassBody: palette.white,
+    attenuation: "#5575F2",
+    rimWhite: palette.white,
+    glassTint: "#B8C9FF",
+    specBroad: palette.white,
+    specFill: "#D4DEFF",
   },
 } as const;
 
-export const sceneBackgroundGradient = `radial-gradient(ellipse 80% 60% at 50% 45%, ${theme.background} 0%, ${theme.backgroundEdge} 100%)`;
+export const sceneBackgroundGradient = theme.background;
 
 /** @deprecated Utiliser `theme` */
 export const colors = {
@@ -101,7 +116,6 @@ export const colors = {
   textPrimary: theme.foreground,
   textSecondary: theme.muted,
   accent: theme.accent,
-  softAccent: theme.softAccent,
   border: theme.border,
   surface: theme.surface.base,
   surfaceHover: theme.surface.hover,
@@ -111,12 +125,10 @@ export const SCENE_BG = theme.background;
 
 export const cssVariables: Record<string, string> = {
   "--background": theme.background,
-  "--background-edge": theme.backgroundEdge,
   "--background-gradient": sceneBackgroundGradient,
   "--foreground": theme.foreground,
   "--text-secondary": theme.muted,
   "--accent": theme.accent,
-  "--soft-accent": theme.softAccent,
   "--border": theme.border,
   "--on-accent": theme.onAccent,
   "--surface": theme.surface.base,

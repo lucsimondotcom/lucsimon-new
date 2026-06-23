@@ -238,7 +238,7 @@ export function StoryPoints({ weights, reducedMotion }: StoryPointsProps) {
                 {[40, 65, 45, 80, 55, 90].map((h, j) => (
                   <span
                     key={j}
-                    className="w-1 rounded-sm bg-soft-accent/55"
+                    className="w-1 rounded-sm bg-accent/55"
                     style={{ height: `${h}%` }}
                   />
                 ))}

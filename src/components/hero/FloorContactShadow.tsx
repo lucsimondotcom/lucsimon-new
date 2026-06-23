@@ -4,36 +4,10 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { theme } from "@/lib/designTokens";
-import { floorShadowVertexShader } from "./floorShadowShaders";
-
-const floorShadowFragmentShader = /* glsl */ `
-uniform vec3 uShadowColor;
-uniform vec3 uReflectionColor;
-uniform float uStrength;
-
-varying vec2 vUv;
-
-void main() {
-  vec2 c = vUv - 0.5;
-  vec2 e = c * vec2(1.0, 0.46);
-  float r = length(e) * 2.05;
-
-  float core = smoothstep(0.72, 0.0, r);
-  core = pow(core, 1.35);
-  float halo = smoothstep(1.0, 0.18, r);
-  halo = pow(halo, 2.2) * 0.55;
-  float shadow = max(core, halo);
-
-  float refl = smoothstep(0.42, 0.0, abs(c.y + 0.06));
-  refl *= smoothstep(0.55, 0.02, abs(c.x));
-  refl *= smoothstep(0.65, 0.08, r);
-  refl = pow(refl, 1.6) * 0.45;
-
-  vec3 color = uShadowColor * shadow + uReflectionColor * refl;
-  float alpha = (shadow * 0.85 + refl * 0.5) * uStrength;
-  gl_FragColor = vec4(color, alpha);
-}
-`;
+import {
+  floorShadowFragmentShader,
+  floorShadowVertexShader,
+} from "./floorShadowShaders";
 
 function parseColor(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
@@ -57,7 +31,12 @@ export function FloorContactShadow({
 
   const uniforms = useMemo(
     () => ({
-      uShadowColor: { value: new THREE.Vector3(...parseColor(theme.scene.shadowCore)) },
+      uShadowCore: {
+        value: new THREE.Vector3(...parseColor(theme.scene.shadowCore)),
+      },
+      uShadowMid: {
+        value: new THREE.Vector3(...parseColor(theme.scene.floorShadow)),
+      },
       uReflectionColor: {
         value: new THREE.Vector3(...parseColor(theme.scene.shadowReflection)),
       },
@@ -78,7 +57,7 @@ export function FloorContactShadow({
       rotation={[-Math.PI / 2, 0, 0]}
       renderOrder={-1}
     >
-      <planeGeometry args={[3.6, 2.2, 1, 1]} />
+      <planeGeometry args={[3.2, 2.0, 1, 1]} />
       <shaderMaterial
         ref={matRef}
         vertexShader={floorShadowVertexShader}
@@ -86,6 +65,8 @@ export function FloorContactShadow({
         uniforms={uniforms}
         transparent
         depthWrite={false}
+        depthTest={false}
+        blending={THREE.NormalBlending}
       />
     </mesh>
   );

@@ -30,8 +30,7 @@ export function ProjectNextLink({ project }: ProjectNextLinkProps) {
           />
         ) : (
           <span
-            className="block h-full w-full"
-            style={{ backgroundColor: project.accent }}
+            className="block h-full w-full bg-accent"
             aria-hidden
           />
         )}

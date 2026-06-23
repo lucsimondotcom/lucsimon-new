@@ -11,7 +11,7 @@ function ProjectStepNumber({ index }: { index: number }) {
   return (
     <p className="text-sm font-medium tracking-wide text-accent">
       <span className="text-2xl">{String(index + 1).padStart(2, "0")}</span>
-      <span className="mx-2.5 text-soft-accent/60">/</span>
+      <span className="mx-2.5 text-accent/40">/</span>
       <span>{String(PROJECT_COUNT).padStart(2, "0")}</span>
     </p>
   );
@@ -66,8 +66,7 @@ export function ProjectPanels({
                   ))}
                 </ul>
                 <span
-                  className="mt-8 block h-1 w-12 rounded-full"
-                  style={{ backgroundColor: project.accent }}
+                  className="mt-8 block h-1 w-12 rounded-full bg-accent"
                   aria-hidden
                 />
                 {isActive && (

@@ -26,7 +26,7 @@ export function HeroIntro({ heroProgress, visible }: HeroIntroProps) {
         <p className="text-[11px] font-normal tracking-[0.28em] text-muted uppercase">
           {HERO_CONTENT.role}
         </p>
-        <h1 className="mt-5 max-w-3xl text-4xl tracking-tight text-foreground sm:text-5xl lg:text-7xl">
+        <h1 className="mt-5 max-w-3xl lg:max-w-4xl text-4xl tracking-tight text-foreground sm:text-5xl lg:text-7xl xl:text-8xl">
           {HERO_CONTENT.name}
         </h1>
         <p className="mt-6 max-w-md text-base text-foreground sm:text-lg">
@@ -35,7 +35,7 @@ export function HeroIntro({ heroProgress, visible }: HeroIntroProps) {
       </div>
 
       <ul
-        className="absolute bottom-8 left-8 space-y-0.5 font-chrome text-xs  tracking-tighter text-foreground uppercase sm:bottom-10 sm:left-12 lg:left-20"
+        className="absolute bottom-8 left-8 space-y-0.5 text-xs tracking-tighter text-foreground uppercase sm:bottom-10 sm:left-12 lg:left-20"
         style={{ opacity: scrollHintOpacity }}
       >
         {HERO_CONTENT.stats.map((line) => (
@@ -48,7 +48,7 @@ export function HeroIntro({ heroProgress, visible }: HeroIntroProps) {
         style={{ opacity: scrollHintOpacity }}
         aria-label="Faire défiler pour commencer"
       >
-        <p className="flex items-center gap-2 font-chrome text-xs font-medium tracking-[0.12em] text-foreground uppercase">
+        <p className="flex items-center gap-2 text-xs font-medium tracking-[0.12em] text-foreground uppercase">
           <span>Commençons</span>
           <ScrollArrowDown className="hero-scroll-arrow shrink-0" />
         </p>

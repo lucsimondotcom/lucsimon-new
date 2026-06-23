@@ -1,8 +1,14 @@
 import { PROJECT_COUNT } from "@/data/projects";
 import { STORY_CAMERA_RAMP } from "@/lib/scrollZones";
 
-export const PROJECTS_INTRO_VH = 90;
+export const PROJECTS_INTRO_VH = 0;
 export const PROJECT_ZONE_VH = 120;
+
+export const PROJECT_READ_FADE = 0.18;
+export const PROJECT_CROSSFADE_START = 0.68;
+/** Centre du plateau projet — aligné sur le snap scroll */
+export const PROJECT_SNAP_HOLD =
+  (PROJECT_READ_FADE + PROJECT_CROSSFADE_START) / 2;
 
 export const PROJECTS_TOTAL_SCROLL_VH =
   PROJECTS_INTRO_VH + PROJECT_ZONE_VH * PROJECT_COUNT;
@@ -21,17 +27,20 @@ function smoothstep(t: number): number {
 
 export function getProjectsIntroProgress(overallProgress: number): number {
   const p = clamp01(overallProgress);
+  if (PROJECTS_INTRO_VH <= 0) return 1;
   if (p >= PROJECTS_INTRO_RATIO) return 1;
   return smoothstep(p / PROJECTS_INTRO_RATIO);
 }
 
 export function isInProjectsIntro(overallProgress: number): boolean {
+  if (PROJECTS_INTRO_VH <= 0) return false;
   return clamp01(overallProgress) < PROJECTS_INTRO_RATIO;
 }
 
 /** Progression 0→1 sur les projets (après l’intro), pour caméra + rail */
 export function getProjectsStoryProgress(overallProgress: number): number {
   const p = clamp01(overallProgress);
+  if (PROJECTS_INTRO_VH <= 0) return p;
   if (p <= PROJECTS_INTRO_RATIO) return 0;
   return clamp01((p - PROJECTS_INTRO_RATIO) / (1 - PROJECTS_INTRO_RATIO));
 }
@@ -49,7 +58,7 @@ export function getProjectScrollState(
   const p = clamp01(overallProgress);
   const count = PROJECT_COUNT;
 
-  if (p <= PROJECTS_INTRO_RATIO) {
+  if (PROJECTS_INTRO_VH > 0 && p <= PROJECTS_INTRO_RATIO) {
     return {
       activeIndex: 0,
       nextIndex: 0,
@@ -65,7 +74,7 @@ export function getProjectScrollState(
   const local = raw - activeIndex;
   const nextIndex = Math.min(count - 1, activeIndex + 1);
 
-  const crossfadeStart = 0.72;
+  const crossfadeStart = PROJECT_CROSSFADE_START;
   const blend =
     activeIndex === nextIndex
       ? 0
@@ -74,7 +83,7 @@ export function getProjectScrollState(
   const panelOpacity = (index: number) => {
     if (index !== activeIndex && index !== nextIndex) return 0;
 
-    const readFade = 0.18;
+    const readFade = PROJECT_READ_FADE;
 
     if (index === activeIndex) {
       if (local < readFade) return local / readFade;

@@ -8,7 +8,7 @@ import { VideoCallIcon } from "@/components/icons/VideoCallIcon";
 export function VisioFab() {
   const pathname = usePathname();
 
-  if (pathname === VISIO_PAGE.href) return null;
+  if (pathname === "/") return null;
   if (/^\/projets\/[^/]+$/.test(pathname)) return null;
 
   return (

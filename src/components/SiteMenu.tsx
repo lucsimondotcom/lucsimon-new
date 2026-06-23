@@ -5,21 +5,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MenuCornerFrame } from "@/components/MenuCornerFrame";
 import { useSiteMenu } from "@/contexts/SiteMenuContext";
+import { useHeaderScroll } from "@/hooks/useHeaderTone";
+import { HEADER_TONE_STYLES } from "@/lib/headerTone";
 import { SITE_MENU } from "@/data/siteNav";
 
 const ICON_SIZE = 14;
 const CONTENT_FADE_MS = 200;
 
 const navLinkClass =
-  "text-xs font-medium tracking-tighter uppercase transition-colors";
+  "text-xs font-medium tracking-wide uppercase transition-colors";
 
 function isActivePath(pathname: string, href: string) {
+  if (href.startsWith("/#")) return pathname === "/";
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export function SiteMenu() {
   const pathname = usePathname();
+  const { tone } = useHeaderScroll();
+  const styles = HEADER_TONE_STYLES[tone];
   const {
     menuOpen,
     menuContentVisible,
@@ -70,7 +75,7 @@ export function SiteMenu() {
       onMouseLeave={scheduleHoverClose}
       onClick={(event) => event.stopPropagation()}
     >
-      <MenuCornerFrame className="absolute inset-0 z-[2]" />
+      <MenuCornerFrame className={`absolute inset-0 z-[2] ${styles.text}`} />
 
       <div
         className="absolute inset-0 z-[1] bg-background/45 backdrop-blur-[2px]"
@@ -88,8 +93,8 @@ export function SiteMenu() {
                   href={item.href}
                   className={`block py-2 ${navLinkClass} ${
                     isActivePath(pathname, item.href)
-                      ? "text-foreground"
-                      : "text-foreground/70 hover:text-foreground"
+                      ? styles.menuActive
+                      : styles.menuInactive
                   }`}
                   onClick={closeMenu}
                   tabIndex={menuContentVisible ? 0 : -1}

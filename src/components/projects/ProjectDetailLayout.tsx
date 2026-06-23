@@ -24,10 +24,10 @@ export function ProjectDetailLayout({
       <div className="mx-auto grid grid-cols-1 gap-8 px-4 py-4 sm:px-12 sm:py-12 lg:grid-cols-4 lg:items-start lg:gap-0 lg:px-20 lg:py-0">
       <aside className="flex flex-col lg:sticky lg:top-16 lg:col-span-1 lg:max-h-[calc(100svh-4rem)] lg:min-h-[calc(100svh-4rem)] lg:self-start lg:py-8 lg:pr-10">
         <div>
-          <h1 className="text-3xl tracking-tight text-foreground sm:text-4xl xl:text-6xl w-3/4 lg:w-full">
+          <h1 className="text-3xl tracking-tight text-foreground sm:text-4xl xl:text-6xl w-4/5 lg:w-full">
             {project.title}
           </h1>
-          <p className="mt-2 lg:mt-8 max-w-xs text-sm lg:text-lg tracking-tighter leading-tight text-muted w-3/4 lg:w-full">
+          <p className="mt-2 lg:mt-8 max-w-xs text-sm lg:text-lg tracking-tighter leading-tight text-muted w-4/5 lg:w-full">
             {detail.subtitle}
           </p>
          

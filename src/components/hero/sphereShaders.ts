@@ -49,15 +49,15 @@ void main() {
   float diffuse = max(dot(n, lightDir), 0.0);
   float spec = pow(max(dot(n, halfDir), 0.0), 64.0);
 
-  vec3 color = base * (0.52 + diffuse * 0.32);
-  color += palette(fresnel + 0.12) * fresnel * 0.28;
-  color += ${sphereGlsl.glassTint} * spec * 0.35;
-  color += cyan * fresnel * 0.12;
-  color += innerGlow * uGlowMix * (0.06 + fresnel * 0.1);
-  color = mix(color, innerGlow, smoothstep(0.3, 0.95, ndv) * 0.08);
+  vec3 color = base * (0.42 + diffuse * 0.28);
+  color += palette(fresnel + 0.12) * fresnel * 0.22;
+  color += ${sphereGlsl.glassTint} * spec * 0.28;
+  color += cyan * fresnel * 0.1;
+  color += innerGlow * uGlowMix * (0.05 + fresnel * 0.08);
+  color = mix(color, innerGlow, smoothstep(0.3, 0.95, ndv) * 0.06);
 
-  float glassAlpha = mix(0.45, 0.8, fresnel);
-  float alpha = mix(glassAlpha, 0.15, uFadeMix);
+  float glassAlpha = mix(0.18, 0.48, fresnel);
+  float alpha = mix(glassAlpha, 0.08, uFadeMix);
   gl_FragColor = vec4(color, alpha);
 }
 `;
