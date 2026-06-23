@@ -9,7 +9,30 @@ import {
   isInHeroIntro,
   STORY_CAMERA_RAMP,
 } from "@/lib/scrollZones";
-import { HERO_CAMERA, HERO_OUTRO_CAMERA, STORY_CAMERA, lerpHero } from "./heroMotion";
+import { HERO_CAMERA, HERO_OUTRO_CAMERA, MOBILE_CAMERA, STORY_CAMERA, lerpHero } from "./heroMotion";
+
+function isMobileViewport(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.innerWidth < 1024;
+}
+
+function applyMobileCamera(
+  camY: number,
+  camZ: number,
+  lookY: number,
+  fov: number,
+): { camY: number; camZ: number; lookY: number; fov: number } {
+  if (!isMobileViewport()) {
+    return { camY, camZ, lookY, fov };
+  }
+
+  return {
+    camY: camY + MOBILE_CAMERA.yOffset,
+    camZ: camZ + MOBILE_CAMERA.zOffset,
+    lookY: lookY + MOBILE_CAMERA.lookYOffset,
+    fov: fov + MOBILE_CAMERA.fovOffset,
+  };
+}
 
 function smoothstep01(t: number): number {
   const x = Math.min(1, Math.max(0, t));
@@ -39,12 +62,13 @@ export function HeroCamera({
       );
       const fov = THREE.MathUtils.lerp(STORY_CAMERA.fov, HERO_OUTRO_CAMERA.fovEnd, outroT);
 
-      camera.position.set(0, camY, camZ);
-      lookTarget.current.set(0, lookY, 0);
+      const mobile = applyMobileCamera(camY, camZ, lookY, fov);
+      camera.position.set(0, mobile.camY, mobile.camZ);
+      lookTarget.current.set(0, mobile.lookY, 0);
       camera.lookAt(lookTarget.current);
 
       if (camera instanceof THREE.PerspectiveCamera) {
-        camera.fov = fov;
+        camera.fov = mobile.fov;
         camera.updateProjectionMatrix();
       }
       return;
@@ -64,12 +88,13 @@ export function HeroCamera({
     const lookY = THREE.MathUtils.lerp(heroLookY, STORY_CAMERA.lookY, storyT);
     const fov = THREE.MathUtils.lerp(heroFov, STORY_CAMERA.fov, storyT);
 
-    camera.position.set(0, camY, camZ);
-    lookTarget.current.set(0, lookY, 0);
+    const mobile = applyMobileCamera(camY, camZ, lookY, fov);
+    camera.position.set(0, mobile.camY, mobile.camZ);
+    lookTarget.current.set(0, mobile.lookY, 0);
     camera.lookAt(lookTarget.current);
 
     if (camera instanceof THREE.PerspectiveCamera) {
-      camera.fov = fov;
+      camera.fov = mobile.fov;
       camera.updateProjectionMatrix();
     }
   });

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MenuCornerFrame } from "@/components/MenuCornerFrame";
 import { useSiteMenu } from "@/contexts/SiteMenuContext";
 import { useHeaderScroll } from "@/hooks/useHeaderTone";
 import { HEADER_TONE_STYLES } from "@/lib/headerTone";
@@ -34,6 +33,28 @@ function ProfileLink({
         sizes="32px"
       />
     </Link>
+  );
+}
+
+function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <span className="relative flex h-3.5 w-4 shrink-0 flex-col justify-between" aria-hidden>
+      <span
+        className={`block h-px w-full bg-current transition-transform duration-200 ${
+          open ? "translate-y-[6.5px] rotate-45" : ""
+        }`}
+      />
+      <span
+        className={`block h-px w-full bg-current transition-opacity duration-200 ${
+          open ? "opacity-0" : "opacity-100"
+        }`}
+      />
+      <span
+        className={`block h-px w-full bg-current transition-transform duration-200 ${
+          open ? "-translate-y-[6.5px] -rotate-45" : ""
+        }`}
+      />
+    </span>
   );
 }
 
@@ -85,15 +106,7 @@ function HeaderNavItem({
 export function Header() {
   const { tone, navSection } = useHeaderScroll();
   const styles = HEADER_TONE_STYLES[tone];
-  const {
-    menuOpen,
-    anchorRef,
-    closeMenu,
-    openMenu,
-    toggleMenu,
-    cancelHoverClose,
-    scheduleHoverClose,
-  } = useSiteMenu();
+  const { menuOpen, closeMenu, toggleMenu } = useSiteMenu();
 
   return (
     <header
@@ -101,8 +114,12 @@ export function Header() {
       className="fixed inset-x-0 top-0 z-[66]"
       data-header-tone={tone}
     >
-      <div className="relative mx-auto flex h-12 lg:h-16 w-full items-center justify-between px-4 sm:px-12 lg:px-20">
-        <div className="flex min-w-0 items-center gap-2.5">
+      <div className="relative mx-auto flex h-12 w-full items-center justify-between px-4 sm:px-12 lg:h-16 lg:px-20">
+        <div className="flex min-w-0 items-center gap-3">
+          <ProfileLink
+            className="lg:hidden"
+            borderClass={styles.profileBorder}
+          />
           <Link
             href="/"
             className={`font-logo shrink-0 ${headerBaseClass} ${styles.text} ${styles.hover} ${
@@ -145,39 +162,22 @@ export function Header() {
             })}
           </nav>
 
-          <div
-            ref={anchorRef}
-            className="relative lg:hidden"
-            onMouseEnter={() => {
-              cancelHoverClose();
-              openMenu();
-            }}
-            onMouseLeave={scheduleHoverClose}
+          <button
+            type="button"
+            className={`flex items-center gap-2.5 lg:hidden ${headerBaseClass} ${styles.text} ${styles.hover} ${
+              menuOpen ? "relative z-[68]" : ""
+            }`}
+            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={menuOpen}
+            aria-controls="site-menu-panel"
+            onClick={toggleMenu}
           >
-            <button
-              type="button"
-              className={`relative flex items-center gap-2.5 ${headerBaseClass} ${styles.text} ${styles.hover} ${
-                menuOpen ? "z-[68]" : "z-[61]"
-              }`}
-              aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-              aria-expanded={menuOpen}
-              aria-controls="site-menu-panel"
-              onClick={(event) => {
-                event.stopPropagation();
-                toggleMenu();
-              }}
-            >
-              Menu
-              <span className="relative block h-3.5 w-3.5 shrink-0" aria-hidden>
-                {!menuOpen && (
-                  <MenuCornerFrame className={`absolute inset-0 ${styles.text}`} />
-                )}
-              </span>
-            </button>
-          </div>
+            Menu
+            <MenuIcon open={menuOpen} />
+          </button>
 
           <ProfileLink
-            className={menuOpen ? "relative z-[68]" : ""}
+            className={`hidden lg:block ${menuOpen ? "relative z-[68]" : ""}`}
             borderClass={styles.profileBorder}
           />
         </div>

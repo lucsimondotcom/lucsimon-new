@@ -31,6 +31,14 @@ export const STORY_CAMERA = {
   lookY: 0,
 } as const;
 
+/** Cadrage mobile — sphère plus haute, caméra reculée */
+export const MOBILE_CAMERA = {
+  yOffset: 0.38,
+  zOffset: 1.05,
+  fovOffset: 6,
+  lookYOffset: -0.12,
+} as const;
+
 export function lerpHero(
   start: number,
   end: number,

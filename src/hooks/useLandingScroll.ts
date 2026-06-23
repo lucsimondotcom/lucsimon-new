@@ -121,19 +121,32 @@ export function useLandingScroll(
       return;
     }
 
+    const touchDevice =
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.innerWidth < 1024;
+
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: container,
         start: "top top",
         end: "bottom bottom",
         scrub: true,
-        snap: {
-          snapTo: (progress) => snapLandingProgress(progress),
-          duration: { min: 0.4, max: 0.72 },
-          delay: 0.06,
-          ease: "power2.inOut",
-          directional: false,
-        },
+        snap: touchDevice
+          ? {
+              snapTo: (progress) =>
+                snapLandingProgress(progress, { touch: true }),
+              duration: { min: 0.28, max: 0.55 },
+              delay: 0.14,
+              ease: "power2.out",
+              directional: true,
+            }
+          : {
+              snapTo: (progress) => snapLandingProgress(progress),
+              duration: { min: 0.4, max: 0.72 },
+              delay: 0.06,
+              ease: "power2.inOut",
+              directional: false,
+            },
         onUpdate: (self) => {
           const landing = self.progress;
           const split = splitLandingProgress(landing);

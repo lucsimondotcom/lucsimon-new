@@ -104,15 +104,22 @@ export function getLandingSnapPoints(): LandingSnapPoint[] {
   ];
 }
 
-export function snapLandingProgress(progress: number): number {
+export function snapLandingProgress(
+  progress: number,
+  options?: { touch?: boolean },
+): number {
   const clamped = Math.min(1, Math.max(0, progress));
   const points = getLandingSnapPoints();
+  const touch = options?.touch ?? false;
+
+  const rubricPull = touch ? 2.1 : RUBRIC_SNAP_PULL;
+  const subPull = touch ? 0.72 : SUB_SNAP_PULL;
 
   let closest = points[0].progress;
   let bestScore = Infinity;
 
   for (const point of points) {
-    const pull = point.tier === "rubrique" ? RUBRIC_SNAP_PULL : SUB_SNAP_PULL;
+    const pull = point.tier === "rubrique" ? rubricPull : subPull;
     const score = Math.abs(clamped - point.progress) / pull;
     if (score < bestScore) {
       bestScore = score;

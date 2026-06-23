@@ -20,7 +20,7 @@ export function HeroBridge({ textOpacity }: HeroBridgeProps) {
       }}
       aria-hidden={reveal < 0.05}
     >
-      <h2 className="max-w-5xl font-display text-4xl leading-[1.05] text-[#F5F5F5] sm:text-6xl lg:text-6xl xl:text-8xl lg:max-w-7xl">
+      <h2 className="max-w-5xl font-display text-[1.65rem] leading-[1.08] text-[#F5F5F5] sm:text-4xl sm:leading-[1.05] lg:text-6xl xl:text-8xl lg:max-w-7xl">
         Je transforme <span className="underline-with-blue">des besoins</span>{" "}
         métiers <span className="underline-with-blue">en solutions digitales</span>{" "}
         sur mesure{" "}

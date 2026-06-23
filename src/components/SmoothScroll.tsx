@@ -27,16 +27,19 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const touchDevice =
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.innerWidth < 1024;
 
     setEnabled(!reducedMotion);
 
     if (reducedMotion) return;
 
     const instance = new Lenis({
-      duration: 1.15,
+      duration: touchDevice ? 1.28 : 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      touchMultiplier: touchDevice ? 1.05 : 1.5,
       anchors: true,
     });
 
