@@ -15,6 +15,7 @@ export function StoryScrollRail({
 
   return (
     <div
+      role="group"
       className="relative flex h-36 flex-col items-end justify-between"
       aria-label={`Étape ${activeZone + 1} sur ${STORY_STEPS.length}`}
     >

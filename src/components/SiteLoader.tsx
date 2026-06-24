@@ -147,6 +147,7 @@ export function SiteLoader() {
   return (
     <div
       ref={overlayRef}
+      role="status"
       className="fixed inset-0 z-[9999] flex flex-col bg-background text-foreground will-change-[opacity]"
       aria-live="polite"
       aria-busy={displayProgress < 100}

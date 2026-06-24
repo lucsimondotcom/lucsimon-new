@@ -20,7 +20,7 @@ export function ProjectsSlider({
   scrollState,
 }: ProjectsSliderProps) {
   return (
-    <div className="relative z-10 h-full" aria-label="Projets récents">
+    <div className="relative z-10 h-full" role="group" aria-label="Projets récents">
       <ProjectPanels
         scrollState={scrollState}
         inIntro={inIntro}

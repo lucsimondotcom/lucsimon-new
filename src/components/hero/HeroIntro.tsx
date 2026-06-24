@@ -37,6 +37,7 @@ export function HeroIntro({ heroProgress, visible }: HeroIntroProps) {
      
 
       <div
+        role="group"
         className="absolute bottom-8 left-1/2 -translate-x-1/2 sm:bottom-10"
         style={{ opacity: scrollHintOpacity }}
         aria-label="Faire défiler pour commencer"

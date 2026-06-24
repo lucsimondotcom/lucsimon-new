@@ -13,6 +13,7 @@ export function ProjectScrollRail({
 
   return (
     <div
+      role="group"
       className="relative flex h-36 flex-col items-end justify-between"
       aria-label={`Projet ${activeIndex + 1} sur ${PROJECT_COUNT}`}
     >
