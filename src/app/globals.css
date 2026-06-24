@@ -80,12 +80,10 @@ body:not(.site-preparing):not(.site-ready) {
 }
 
 body:not(.site-ready) #site-app {
-  visibility: hidden;
   pointer-events: none;
 }
 
 body:not(.site-ready) #site-scrollbar {
-  visibility: hidden;
   pointer-events: none;
 }
 

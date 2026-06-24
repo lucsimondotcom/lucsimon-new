@@ -9,11 +9,9 @@ body:not(.site-ready) {
   background: #F5F5F5;
 }
 body:not(.site-ready) #site-app {
-  visibility: hidden;
   pointer-events: none;
 }
 body:not(.site-ready) #site-scrollbar {
-  visibility: hidden;
   pointer-events: none;
 }
 body.site-preparing:not(.site-ready) {

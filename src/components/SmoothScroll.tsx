@@ -27,38 +27,64 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const touchDevice =
-      window.matchMedia("(pointer: coarse)").matches ||
-      window.innerWidth < 1024;
 
     setEnabled(!reducedMotion);
 
     if (reducedMotion) return;
 
-    const instance = new Lenis({
-      duration: touchDevice ? 1.28 : 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      touchMultiplier: touchDevice ? 1.05 : 1.5,
-      anchors: true,
-    });
+    let instance: Lenis | null = null;
+    let cancelled = false;
 
-    setLenis(instance);
+    const boot = () => {
+      if (cancelled) return;
 
-    instance.on("scroll", ScrollTrigger.update);
+      const touchDevice =
+        window.matchMedia("(pointer: coarse)").matches ||
+        window.innerWidth < 1024;
 
-    const ticker = (time: number) => {
-      instance.raf(time * 1000);
+      instance = new Lenis({
+        duration: touchDevice ? 1.28 : 1.15,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: touchDevice ? 1.05 : 1.5,
+        anchors: true,
+      });
+
+      setLenis(instance);
+
+      instance.on("scroll", ScrollTrigger.update);
+
+      const ticker = (time: number) => {
+        instance?.raf(time * 1000);
+      };
+
+      gsap.ticker.add(ticker);
+      gsap.ticker.lagSmoothing(0);
+
+      ScrollTrigger.refresh();
+
+      return ticker;
     };
 
-    gsap.ticker.add(ticker);
-    gsap.ticker.lagSmoothing(0);
+    let ticker: ((time: number) => void) | undefined;
+    const start = () => {
+      ticker = boot();
+    };
 
-    ScrollTrigger.refresh();
+    const usesIdle = typeof window.requestIdleCallback === "function";
+    const idleId = usesIdle
+      ? window.requestIdleCallback(start, { timeout: 900 })
+      : window.setTimeout(start, 120);
 
     return () => {
-      gsap.ticker.remove(ticker);
-      instance.destroy();
+      cancelled = true;
+      if (usesIdle) {
+        window.cancelIdleCallback(idleId);
+      } else {
+        window.clearTimeout(idleId);
+      }
+      if (ticker) gsap.ticker.remove(ticker);
+      instance?.destroy();
       setLenis(null);
     };
   }, []);

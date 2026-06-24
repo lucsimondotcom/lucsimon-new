@@ -121,65 +121,85 @@ export function useLandingScroll(
       return;
     }
 
-    const touchDevice =
-      window.matchMedia("(pointer: coarse)").matches ||
-      window.innerWidth < 1024;
+    let ctx: gsap.Context | undefined;
+    let cancelled = false;
 
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: container,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-        snap: touchDevice
-          ? {
-              snapTo: (progress) =>
-                snapLandingProgress(progress, { touch: true }),
-              duration: { min: 0.28, max: 0.55 },
-              delay: 0.14,
-              ease: "power2.out",
-              directional: true,
-            }
-          : {
-              snapTo: (progress) => snapLandingProgress(progress),
-              duration: { min: 0.4, max: 0.72 },
-              delay: 0.06,
-              ease: "power2.inOut",
-              directional: false,
-            },
-        onUpdate: (self) => {
-          const landing = self.progress;
-          const split = splitLandingProgress(landing);
-          const methodP =
-            split.phase === "projects" ? 1 : split.methodProgress;
-          const zone = getZoneState(methodP);
+    const setup = () => {
+      if (cancelled) return;
 
-          setLandingProgress(landing);
-          setPhase(split.phase);
-          setMethodProgress(split.methodProgress);
-          setProjectsProgress(split.projectsProgress);
+      const touchDevice =
+        window.matchMedia("(pointer: coarse)").matches ||
+        window.innerWidth < 1024;
 
-          setHeroProgress(getHeroIntroProgress(methodP));
-          setOutroProgress(getHeroOutroProgress(methodP));
-          setOutroTextProgress(getHeroOutroTextOpacity(methodP));
-          setStoryProgress(getStoryProgress(methodP));
-          setInHeroIntro(isInHeroIntro(methodP));
-          setInHeroBridge(isInHeroBridge(methodP));
-          setInStoryZones(isInStoryZones(methodP));
-          setBridgeTextOpacity(getHeroBridgeTextOpacity(methodP));
-          setInHeroOutro(isInHeroOutro(methodP));
-          setActiveZone(zone.zoneIndex);
-          setZoneLocalProgress(zone.zoneLocalProgress);
+      ctx = gsap.context(() => {
+        ScrollTrigger.create({
+          trigger: container,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+          snap: touchDevice
+            ? {
+                snapTo: (progress) =>
+                  snapLandingProgress(progress, { touch: true }),
+                duration: { min: 0.28, max: 0.55 },
+                delay: 0.14,
+                ease: "power2.out",
+                directional: true,
+              }
+            : {
+                snapTo: (progress) => snapLandingProgress(progress),
+                duration: { min: 0.4, max: 0.72 },
+                delay: 0.06,
+                ease: "power2.inOut",
+                directional: false,
+              },
+          onUpdate: (self) => {
+            const landing = self.progress;
+            const split = splitLandingProgress(landing);
+            const methodP =
+              split.phase === "projects" ? 1 : split.methodProgress;
+            const zone = getZoneState(methodP);
 
-          setProjectsIntroProgress(getProjectsIntroProgress(split.projectsProgress));
-          setProjectsStoryProgress(getProjectsStoryProgress(split.projectsProgress));
-          setInProjectsIntro(isInProjectsIntro(split.projectsProgress));
-          setProjectScrollState(getProjectScrollState(split.projectsProgress));
-        },
-      });
-    }, container);
+            setLandingProgress(landing);
+            setPhase(split.phase);
+            setMethodProgress(split.methodProgress);
+            setProjectsProgress(split.projectsProgress);
 
-    return () => ctx.revert();
+            setHeroProgress(getHeroIntroProgress(methodP));
+            setOutroProgress(getHeroOutroProgress(methodP));
+            setOutroTextProgress(getHeroOutroTextOpacity(methodP));
+            setStoryProgress(getStoryProgress(methodP));
+            setInHeroIntro(isInHeroIntro(methodP));
+            setInHeroBridge(isInHeroBridge(methodP));
+            setInStoryZones(isInStoryZones(methodP));
+            setBridgeTextOpacity(getHeroBridgeTextOpacity(methodP));
+            setInHeroOutro(isInHeroOutro(methodP));
+            setActiveZone(zone.zoneIndex);
+            setZoneLocalProgress(zone.zoneLocalProgress);
+
+            setProjectsIntroProgress(getProjectsIntroProgress(split.projectsProgress));
+            setProjectsStoryProgress(getProjectsStoryProgress(split.projectsProgress));
+            setInProjectsIntro(isInProjectsIntro(split.projectsProgress));
+            setProjectScrollState(getProjectScrollState(split.projectsProgress));
+          },
+        });
+      }, container);
+    };
+
+    const usesIdle = typeof window.requestIdleCallback === "function";
+    const idleId = usesIdle
+      ? window.requestIdleCallback(setup, { timeout: 1400 })
+      : window.setTimeout(setup, 160);
+
+    return () => {
+      cancelled = true;
+      if (usesIdle) {
+        window.cancelIdleCallback(idleId);
+      } else {
+        window.clearTimeout(idleId);
+      }
+      ctx?.revert();
+    };
   }, [containerRef, reducedMotion]);
 
   return {

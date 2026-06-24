@@ -1,13 +1,12 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { MenuCornerFrame } from "@/components/MenuCornerFrame";
-import { useSiteLoader, waitForExperienceReady } from "@/contexts/SiteLoaderContext";
+import { useSiteLoader } from "@/contexts/SiteLoaderContext";
 import { useSmoothScroll } from "@/contexts/SmoothScrollContext";
 
-const MIN_DURATION_MS = 1500;
+const MIN_DURATION_MS = 700;
 
 const brandTextClass =
   "text-xs font-medium tracking-[0.08em] text-foreground uppercase";
@@ -42,7 +41,6 @@ function markSiteReady() {
 }
 
 export function SiteLoader() {
-  const pathname = usePathname();
   const { setComplete } = useSiteLoader();
   const { lenis } = useSmoothScroll();
   const lenisRef = useRef(lenis);
@@ -113,17 +111,17 @@ export function SiteLoader() {
       exitStarted = true;
 
       counterTween.kill();
+      markSiteReady();
 
       gsap.to(progress, {
         value: 100,
-        duration: 0.35,
+        duration: 0.28,
         ease: "power2.inOut",
         onUpdate: () => setDisplayProgress(Math.round(progress.value)),
         onComplete: () => {
-          markSiteReady();
           gsap.to(overlayRef.current, {
             opacity: 0,
-            duration: 0.7,
+            duration: 0.55,
             ease: "power2.inOut",
             onComplete: finish,
           });
@@ -131,10 +129,7 @@ export function SiteLoader() {
       });
     };
 
-    const experienceWait =
-      pathname === "/" ? waitForExperienceReady() : Promise.resolve();
-
-    Promise.all([waitForAssets(), experienceWait]).then(runExit);
+    void waitForAssets().then(runExit);
 
     return () => {
       counterTween.kill();
