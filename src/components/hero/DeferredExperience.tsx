@@ -2,11 +2,33 @@
 
 import dynamic from "next/dynamic";
 import { useLayoutEffect, useState } from "react";
+import { LANDING_IMMERSIVE_SCROLL_VH } from "@/lib/landingScroll";
+
+const SCROLL_SECTION_STYLE = {
+  height: `${LANDING_IMMERSIVE_SCROLL_VH}vh`,
+  minHeight: `${LANDING_IMMERSIVE_SCROLL_VH}vh`,
+} as const;
+
+function ExperiencePlaceholder() {
+  return (
+    <section
+      id="methode"
+      className="relative scroll-mt-12 bg-background lg:scroll-mt-16"
+      style={SCROLL_SECTION_STYLE}
+      aria-hidden
+    >
+      <div className="sticky top-0 h-screen bg-background" />
+    </section>
+  );
+}
 
 const HolographicSystemHero = dynamic(
   () =>
     import("./HolographicSystemHero").then((mod) => mod.HolographicSystemHero),
-  { ssr: false },
+  {
+    ssr: false,
+    loading: () => <ExperiencePlaceholder />,
+  },
 );
 
 function shouldPrepareExperience() {
@@ -42,13 +64,7 @@ export function DeferredExperience() {
   }, []);
 
   if (!showExperience) {
-    return (
-      <section
-        id="methode"
-        className="h-screen scroll-mt-12 bg-background lg:scroll-mt-16"
-        aria-hidden
-      />
-    );
+    return <ExperiencePlaceholder />;
   }
 
   return <HolographicSystemHero />;

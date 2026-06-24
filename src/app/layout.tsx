@@ -10,6 +10,7 @@ const neueHaasRoman = localFont({
   variable: "--font-neue-haas-roman",
   weight: "400",
   display: "swap",
+  adjustFontFallback: "Arial",
 });
 
 const neueHaasMedium = localFont({
@@ -17,6 +18,7 @@ const neueHaasMedium = localFont({
   variable: "--font-neue-haas-medium",
   weight: "500",
   display: "swap",
+  adjustFontFallback: "Arial",
 });
 
 const safiroRegular = localFont({
@@ -24,6 +26,7 @@ const safiroRegular = localFont({
   variable: "--font-safiro-regular",
   weight: "400",
   display: "swap",
+  adjustFontFallback: "Times New Roman",
 });
 
 const safiroItalic = localFont({
@@ -32,6 +35,7 @@ const safiroItalic = localFont({
   weight: "400",
   style: "italic",
   display: "swap",
+  adjustFontFallback: "Times New Roman",
 });
 
 export const metadata: Metadata = {
@@ -48,14 +52,14 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${neueHaasRoman.variable} ${neueHaasMedium.variable} ${safiroItalic.variable} h-full`}
+      className={`${neueHaasRoman.variable} ${neueHaasMedium.variable} ${safiroRegular.variable} ${safiroItalic.variable} h-full`}
       suppressHydrationWarning
     >
       <head>
         <ThemeVars />
         <style dangerouslySetInnerHTML={{ __html: CRITICAL_LOADER_CSS }} />
       </head>
-      <body className="min-h-full" suppressHydrationWarning>
+      <body className="site-preparing min-h-full" suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>

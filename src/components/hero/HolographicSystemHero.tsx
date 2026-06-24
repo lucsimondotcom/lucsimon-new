@@ -162,7 +162,9 @@ export function HolographicSystemHero() {
       ref={scrollRef}
       className="relative scroll-mt-12 lg:scroll-mt-16"
       style={{
-        ...(scrollHeight ? { height: `${scrollHeight}vh` } : {}),
+        ...(scrollHeight
+          ? { height: `${scrollHeight}vh`, minHeight: `${scrollHeight}vh` }
+          : { minHeight: "100vh" }),
       }}
       aria-label="Parcours"
     >
